@@ -6,13 +6,13 @@ Node::Node(int id, std::string code) : id(id), code(std::move(code)) {}
 
 /* Getters */
 
-int Node::getId() const { return id; }
+int Node::getID() const { return id; }
 
 std::string Node::getCode() const { return code; }
 
 /* Setters */
 
-void Node::setId(int newID) { Node::id = newID; }
+void Node::setID(int newID) { Node::id = newID; }
 
 void Node::setCode(std::string newCode) { Node::code = std::move(newCode); }
 

@@ -10,11 +10,11 @@ public:
     Node(int id, std::string code);
 
     /* Getters */
-    int getId() const;
+    int getID() const;
     std::string getCode() const;
 
     /* Setters */
-    void setId(int newID);
+    void setID(int newID);
     void setCode(std::string newCode);
 
     /* Operators */
