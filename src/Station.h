@@ -1,14 +1,14 @@
 #ifndef STATION_H
 #define STATION_H
 
-#include <string>
+#include "Node.h"
 
-class Station {
+class Station : public Node {
 public:
 
-private:
-    int id;
-    std::string code;
+    /* Constructor */
+    Station(int id, std::string code);
+
 };
 
-#endif //STATION_H
+#endif /* STATION_H */

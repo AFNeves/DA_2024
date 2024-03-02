@@ -1,3 +1,8 @@
+# Directories
 .idea/
+build/
 .vscode/
+cmake-build-debug/
+
+# File Extensions
 *.o
