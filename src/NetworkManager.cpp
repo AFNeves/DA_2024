@@ -1,6 +1,10 @@
+// In NetworkManager.cpp
+
 #include "NetworkManager.h"
 #include "Graph.h"
 #include <fstream>
+#include <map>
+#include <algorithm>
 
 void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
                               const std::vector<City>& cities,
@@ -13,7 +17,7 @@ void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
         graph.addVertex(reservoir.getCode());
     }
 
-    // Adicionar cidades e estações como nós intermediários
+    // Adicionar cidades como nós intermediários
     for (const auto& city : cities) {
         graph.addVertex(city.getCode());
     }
@@ -21,7 +25,7 @@ void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
     // Adicionar arestas representando tubulações conectando nós
     for (const auto& station : stations) {
         // Supondo que cada estação conecta dois nós (A e B) via tubulações
-        graph.addEdge(station.getCode(), station.getCode(), station.getCapacity());
+        graph.addBidirectionalEdge(station.getCode_A(), station.getCode_B(), station.getCapacity());
     }
 
     // Calcular o fluxo máximo para cada cidade usando o algoritmo de Edmonds-Karp
@@ -29,7 +33,7 @@ void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
 
     for (const auto& reservoir : reservoirs) {
         // Para cada reservatório, encontrar o fluxo máximo para todas as cidades
-        std::map<std::string, int> maxFlowFromReservoir = graph.findMaxFlow(reservoir.getCode());
+        std::map<std::string, int> maxFlowFromReservoir = graph.findMaxFlow(reservoir.getCode(), "destination");
 
         // Mesclar o fluxo máximo deste reservatório com o fluxo máximo geral para as cidades
         for (const auto& pair : maxFlowFromReservoir) {

@@ -1,5 +1,14 @@
 #include "Station.h"
 
-/* Constructor */
+// Constructor implementation
+Station::Station(int id, std::string code, int capacity, std::string code_A, std::string code_B)
+        : Node(id, code), capacity(capacity), code_A(code_A), code_B(code_B) {}
 
-Station::Station(int id, std::string code) : Node(id, std::move(code)) {}
+// Getter implementations
+std::string Station::getCode_A() const {
+    return code_A;
+}
+
+std::string Station::getCode_B() const {
+    return code_B;
+}

@@ -10,6 +10,8 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
+#include <climits>
+#include <map>
 #include "MutablePriorityQueue.h"
 
 template <class T>
@@ -80,6 +82,7 @@ public:
     void setSelected(bool selected);
     void setReverse(Edge<T> *reverse);
     void setFlow(double flow);
+    Edge<T> *findEdge(const T& source, const T& dest) const;
 protected:
     Vertex<T> * dest; // destination vertex
     double weight; // edge weight, can also be used for capacity
@@ -131,6 +134,7 @@ public:
     bool isDAG() const;
     bool dfsIsDAG(Vertex<T> *v) const;
     std::vector<T> topsort() const;
+    std::map<T, int> findMaxFlow(const T &source, const T &destination);
 protected:
     std::vector<Vertex<T> *> vertexSet;    // vertex set
 
@@ -340,6 +344,20 @@ template <class T>
 void Edge<T>::setFlow(double flow) {
     this->flow = flow;
 }
+
+template<class T>
+Edge<T> *findEdge(const T& source, const T& dest) {
+    Vertex<T>* srcVertex = findVertex(source);
+    if (srcVertex != nullptr) {
+        for (Edge<T>* edge : srcVertex->getAdj()) {
+            if (edge->getDest()->getInfo() == dest) {
+                return edge;
+            }
+        }
+    }
+    return nullptr;
+}
+
 
 /********************** Graph  ****************************/
 
@@ -663,6 +681,75 @@ template <class T>
 Graph<T>::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());
+}
+
+template <class T>
+std::map<T, int> Graph<T>::findMaxFlow(const T &source, const T &destination) {
+    std::map<T, int> maxFlowMap; // Mapa para armazenar o fluxo máximo para cada vértice
+
+    while (true) {
+        std::queue<T> q;
+        std::map<T, T> parentMap; // Para reconstruir o caminho aumentante
+        q.push(source);
+        parentMap[source] = source;
+        bool foundAugmentingPath = false;
+
+        // BFS para encontrar um caminho aumentante
+        while (!q.empty()) {
+            T current = q.front();
+            q.pop();
+
+            // Verifique cada aresta saindo do vértice atual
+            for (Edge<T> *edge : findVertex(current)->getAdj()) {
+                T next = edge->getDest()->getInfo();
+                if (edge->getWeight() > 0 && parentMap.find(next) == parentMap.end()) {
+                    q.push(next);
+                    parentMap[next] = current;
+
+                    // Se chegamos ao destino, paramos
+                    if (next == destination) {
+                        foundAugmentingPath = true;
+                        break;
+                    }
+                }
+            }
+
+            if (foundAugmentingPath) {
+                // Atualizar o fluxo ao longo do caminho aumentante
+                T current = destination;
+                int bottleneck = INT_MAX;
+                while (current != source) {
+                    T parent = parentMap[current];
+                    Edge<T> *edge = findEdge(parent, current);
+                    bottleneck = std::min(bottleneck, edge->getWeight());
+                    current = parent;
+                }
+
+                // Atualizar o fluxo ao longo do caminho aumentante
+                current = destination;
+                while (current != source) {
+                    T parent = parentMap[current];
+                    Edge<T> *edge = findEdge(parent, current);
+                    edge->setWeight(edge->getWeight() - bottleneck);
+                    Edge<T> *reverseEdge = edge->getReverse();
+                    reverseEdge->setWeight(reverseEdge->getWeight() + bottleneck);
+                    current = parent;
+                }
+
+                break; // Encontramos um caminho aumentante, podemos sair do BFS
+            }
+        }
+
+        if (!foundAugmentingPath) {
+            // Não há mais caminhos aumentantes, terminamos
+            break;
+        }
+    }
+
+    // Calcular o fluxo máximo para cada vértice
+    // Implemente isso com base na sua estrutura de grafo específica
+
+    return maxFlowMap;
 }
 
 #endif //DA_2024_GRAPH_H
