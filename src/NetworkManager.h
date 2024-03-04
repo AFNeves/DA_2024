@@ -1,7 +1,4 @@
-//
-// Created by lara2 on 02/03/2024.
-//
-
+// NetworkManager.h
 #ifndef DA_2024_NETWORKMANAGER_H
 #define DA_2024_NETWORKMANAGER_H
 
@@ -9,6 +6,7 @@
 #include "City.h"
 #include "Station.h"
 #include <vector>
+#include "Max_Flow.h"
 
 class NetworkManager {
 public:
@@ -16,8 +14,6 @@ public:
     static void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
                                          const std::vector<City>& cities,
                                          const std::vector<Station>& stations);
-
 };
-
 
 #endif //DA_2024_NETWORKMANAGER_H

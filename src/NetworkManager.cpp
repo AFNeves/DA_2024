@@ -1,14 +1,14 @@
-// In NetworkManager.cpp
-
+// NetworkManager.cpp
 #include "NetworkManager.h"
+#include "Max_Flow.h"
 #include "Graph.h"
 #include <fstream>
 #include <map>
 #include <algorithm>
 
-void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
-                              const std::vector<City>& cities,
-                              const std::vector<Station>& stations) {
+void NetworkManager::determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
+                                              const std::vector<City>& cities,
+                                              const std::vector<Station>& stations) {
     // Criar um grafo e preenchê-lo com nós e arestas
     Graph<std::string> graph;
 
@@ -31,14 +31,24 @@ void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
     // Calcular o fluxo máximo para cada cidade usando o algoritmo de Edmonds-Karp
     std::map<std::string, int> maxFlowToCities; // Mapa para armazenar o fluxo máximo para cada cidade
 
-    for (const auto& reservoir : reservoirs) {
-        // Para cada reservatório, encontrar o fluxo máximo para todas as cidades
-        std::map<std::string, int> maxFlowFromReservoir = graph.findMaxFlow(reservoir.getCode(), "destination");
+    Max_Flow maxFlowCalculator; // Crie um objeto da classe Max_Flow
 
-        // Mesclar o fluxo máximo deste reservatório com o fluxo máximo geral para as cidades
-        for (const auto& pair : maxFlowFromReservoir) {
-            maxFlowToCities[pair.first] = std::max(maxFlowToCities[pair.first], pair.second);
+    for (size_t i = 0; i < reservoirs.size(); ++i) {
+        // Para cada reservatório, encontrar o fluxo máximo para todas as cidades
+        maxFlowCalculator.edmondsKarp(&graph, i, reservoirs.size() + cities.size()); // Use o objeto para chamar a função edmondsKarp
+
+        // Atualizar o mapa de fluxo máximo para cidades
+        for (const auto& city : cities) {
+            int cityFlow = 0;
+            auto cityVertex = graph.findVertex(city.getCode());
+            for (auto edge : cityVertex->getIncoming()) {
+                cityFlow += edge->getFlow(); // Somar os fluxos de todas as arestas de entrada da cidade
+            }
+            maxFlowToCities[city.getCode()] += cityFlow;
         }
+
+        // Reiniciar o fluxo no grafo para a próxima iteração
+        graph.resetFlow();
     }
 
     // Exibir os resultados
