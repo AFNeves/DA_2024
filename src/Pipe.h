@@ -1,32 +1,30 @@
 #ifndef PIPE_H
 #define PIPE_H
 
-#include "Node.h"
+class Node;
 
 class Pipe {
 public:
+	friend class Node;
 
     /* Constructor */
-    Pipe(Node *a, Node *b, int capacity, bool biDirection);
+    Pipe(Node *src, Node *dest, int capacity);
 
     /* Getters */
-    Node *getA() const;
-    Node *getB() const;
+    Node *getSrc() const;
+    Node *getDest() const;
     int getCapacity() const;
-    bool isBiDirectional() const;
 
     /* Setters */
-    void setA(Node *newNode);
-    void setB(Node *newNode);
+    void setSrc(Node *newNode);
+    void setDest(Node *newNode);
     void setCapacity(int newCapacity);
-    void setBiDirection(bool newDirection);
 
 private:
 
-    Node *A;
-    Node *B;
+    Node *src;
+    Node *dest;
     int capacity;
-    bool biDirection;
 
 };
 
