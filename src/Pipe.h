@@ -6,6 +6,7 @@ class Node;
 class Pipe {
 public:
 	friend class Node;
+    friend class Network;
 
     /* Constructor */
     Pipe(Node *src, Node *dest, int capacity);

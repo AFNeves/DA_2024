@@ -9,6 +9,7 @@ class Pipe;
 class Node {
 public:
     friend class Pipe;
+    friend class Network;
 
     /* Constructor */
     Node(int id, std::string code);
