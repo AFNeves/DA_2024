@@ -14,7 +14,7 @@ public:
     Node(int id, std::string code);
 
     /* Destructor */
-    ~Node();
+    virtual ~Node();
 
     /* Getters */
     int getID() const;
