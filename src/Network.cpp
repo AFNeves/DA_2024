@@ -4,11 +4,21 @@
 #include <sstream>
 #include <iostream>
 
+#include "City.h"
+#include "Station.h"
+#include "Reservoir.h"
+
 using namespace std;
 
 /* Constructor */
 
-Network::Network() {}
+Network::Network()
+{
+    readCities("../data/Cities_Madeira.csv");
+    readStations("../data/Stations_Madeira.csv");
+    readReservoirs("../data/Reservoirs_Madeira.csv");
+    readPipes("../data/Pipes_Madeira.csv");
+}
 
 /* Destructor */
 
@@ -85,31 +95,137 @@ bool Network::readStations(const std::string &fileLocation) {
         getline(ss, ID, ',');
         getline(ss, Code, ',');
 
-        if(Township[0] == '"'){
-            getline(file, temp, '"');
-            Township += "," + temp;
-            temp = "";
-            for(int i=1; i<Township.size()-1; i++){
-                temp+=Township[i];
-            }
-        }
-        getline(file, Line);
+        if (Code.empty()) continue;
 
-        bool insert = true;
-        for (auto station : stations) {
-            if (station->getName() == Name) {
-                insert = false;
-                break;
-            }
-        }
-
-        if (insert == true) {
-            stations.push_back(new Station(Name, District, Municipality, Township, Line));
-        }
+        nodeSet[Code] = new Station(stoi(ID), Code);
 
         n++;
     }
 
+    std::cout << "SUCCESS : readStations read " << n << " stations!" << std::endl;
+
     file.close();
-    return n;
+    return true;
+}
+
+bool Network::readCities(const std::string &fileLocation) {
+
+    std::fstream file;
+    file.open(fileLocation, ios::in);
+    if (!file.is_open()) {
+        std::cout << "ERROR - The function \"readCities\" could not read the data" << std::endl;
+        return false;
+    }
+
+    std::string line;
+    getline(file, line); // Skip fist line
+
+    int n = 0;
+    std::string ID, Code, Name, Demand, Population;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        std::istringstream ss(line);
+
+        getline(ss, Name, ',');
+        getline(ss, ID, ',');
+        getline(ss, Code, ',');
+        getline(ss, Demand, ',');
+        getline(ss, Population, '\"');
+        getline(ss, Population, '\"');
+
+        if (Code.empty()) continue;
+
+        nodeSet[Code] = new City(Name, stoi(ID), Code, stof(Demand), Population);
+
+        n++;
+    }
+
+    std::cout << "SUCCESS : readCities read " << n << " cities!" << std::endl;
+
+    file.close();
+    return true;
+}
+
+bool Network::readReservoirs(const std::string &fileLocation) {
+
+    std::fstream file;
+    file.open(fileLocation, ios::in);
+    if (!file.is_open()) {
+        std::cout << "ERROR - The function \"readReservoirs\" could not read the data" << std::endl;
+        return false;
+    }
+
+    std::string line;
+    getline(file, line); // Skip fist line
+
+    int n = 0;
+    std::string ID, Code, Name, Municipality, MaxDelivery;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        std::istringstream ss(line);
+
+        getline(ss, Name, ',');
+        getline(ss, Municipality, ',');
+        getline(ss, ID, ',');
+        getline(ss, Code, ',');
+        getline(ss, MaxDelivery, ',');
+
+        if (Code.empty()) continue;
+
+        nodeSet[Code] = new Reservoir(Name, Municipality, stoi(ID), Code, stoi(MaxDelivery));
+
+        n++;
+    }
+
+    std::cout << "SUCCESS : readReservoirs read " << n << " reservoirs!" << std::endl;
+
+    file.close();
+    return true;
+}
+
+bool Network::readPipes(const std::string &fileLocation) {
+
+    std::fstream file;
+    file.open(fileLocation, ios::in);
+    if (!file.is_open()) {
+        std::cout << "ERROR - The function \"readPipes\" could not read the data" << std::endl;
+        return false;
+    }
+
+    std::string line;
+    getline(file, line); // Skip fist line
+
+    int n = 0;
+    std::string SRC, DEST, Capacity, Direction;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        std::istringstream ss(line);
+
+        getline(ss, SRC, ',');
+        getline(ss, DEST, ',');
+        getline(ss, Capacity, ',');
+        getline(ss, Direction, ',');
+
+        Node *src = findNode(SRC);
+        Node *dest = findNode(DEST);
+
+        if (src == nullptr || dest == nullptr) return false;
+
+        src->addPipe(dest, stoi(Capacity));
+
+        if (Direction == "1") { dest->addPipe(src, stoi(Capacity)); }
+
+        n++;
+    }
+
+    std::cout << "SUCCESS : readPipes read " << n << " pipes!" << std::endl;
+
+    file.close();
+    return true;
 }

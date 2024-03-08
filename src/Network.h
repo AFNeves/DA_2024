@@ -27,6 +27,13 @@ public:
     bool addPipe(const std::string& src, const std::string& dest, int capacity);
     bool removePipe(const std::string& src, const std::string& dest);
 
+    /* Parsing */
+
+    bool readStations(const std::string &fileLocation);
+    bool readCities(const std::string &fileLocation);
+    bool readReservoirs(const std::string &fileLocation);
+    bool readPipes(const std::string &fileLocation);
+
 private:
 
     std::unordered_map<std::string, Node *> nodeSet;
