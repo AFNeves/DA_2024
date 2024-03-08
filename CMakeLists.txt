@@ -16,6 +16,7 @@ set(
         ${SRC_DIR}/Station.cpp
         ${SRC_DIR}/Reservoir.cpp
         ${SRC_DIR}/Network.cpp
+        ${SRC_DIR}/Menu.cpp
 )
 
 add_executable(WaterSupplyManager ${SOURCE_FILES})
