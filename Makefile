@@ -8,15 +8,15 @@ CXXFLAGS = -Wall -Wextra -std=c++11
 TARGET = main
 
 # List of source files
-SRCS = main.cpp src/Node.cpp src/Station.cpp src/Pipe.cpp
+SRCS = main.cpp src/Node.cpp src/Station.cpp src/Pipe.cpp src/Reservoir.cpp src/NetworkManager.cpp src/Max_Flow.cpp src/City.cpp
 
 # List of object files
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
+$(TARGET): $(OBJS) src/Max_Flow.o
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) src/Max_Flow.o
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
