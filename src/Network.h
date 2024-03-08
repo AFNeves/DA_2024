@@ -21,6 +21,12 @@ public:
     /* Setters */
     void setNodeSet(std::unordered_map<std::string, Node *> &nodeSet);
 
+    /* Functions */
+    int getNumNodes() const;
+    Node *findNode(const std::string& nodeCode);
+    bool addPipe(const std::string& src, const std::string& dest, int capacity);
+    bool removePipe(const std::string& src, const std::string& dest);
+
 private:
 
     std::unordered_map<std::string, Node *> nodeSet;
