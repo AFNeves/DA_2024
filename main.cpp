@@ -10,11 +10,11 @@ int main()
     Station station1(3,"S-09");
     Station station2(6,"S-52");
 
-    Pipe pipe(&station1, &station2, 50, false);
+    Pipe pipe(&station1, &station2, 50);
 
-    cout << "\nStation | ID:" << pipe.getA()->getID() << " Code:" << pipe.getA()->getCode() << "\n";
-    cout << "\nStation | ID:" << pipe.getB()->getID() << " Code:" << pipe.getB()->getCode() << "\n";
-    cout << "\nPipe | Capacity:" << pipe.getCapacity() << " IsDirection:" << pipe.isBiDirectional() << "\n\n";
+    cout << "\nStation | ID:" << pipe.getSrc()->getID() << " Code:" << pipe.getSrc()->getCode() << "\n";
+    cout << "\nStation | ID:" << pipe.getDest()->getID() << " Code:" << pipe.getDest()->getCode() << "\n";
+    cout << "\nPipe | Capacity:" << pipe.getCapacity() << "\n\n";
 
     return 0;
 }
