@@ -7,23 +7,23 @@ class City : public Node {
 public:
 
     /* Constructor */
-    City(std::string name, int id, std::string code, float demand, int population);
+    City(std::string name, int id, std::string code, float demand, std::string population);
 
     /* Getters */
     std::string getName() const;
     float getDemand() const;
-    int getPopulation() const;
+    std::string getPopulation() const;
 
     /* Setters */
     void setName(std::string newName);
     void setDemand(float newDemand);
-    void setPopulation(int newPopulation);
+    void setPopulation(std::string newPopulation);
 
 private:
 
     std::string name;
     float demand;
-    int population;
+    std::string population;
 
 };
 
