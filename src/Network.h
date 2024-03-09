@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 #include "Node.h"
-#include "Pipe.h"
 
 class Network {
 public:
@@ -27,6 +26,13 @@ public:
     Node *findNode(const std::string& nodeCode);
     bool addPipe(const std::string& src, const std::string& dest, int capacity);
     bool removePipe(const std::string& src, const std::string& dest);
+
+    /* Parsing */
+
+    bool readStations(const std::string &fileLocation);
+    bool readCities(const std::string &fileLocation);
+    bool readReservoirs(const std::string &fileLocation);
+    bool readPipes(const std::string &fileLocation);
     bool addNode(int id, const std::string& code);
     bool removeNode(int id, const std::string& code);
 
