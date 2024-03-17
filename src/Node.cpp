@@ -69,3 +69,10 @@ bool Node::removePipeTo(Node *dest)
         }
     return false;
 }
+
+Node* Node::getPath() const { return path; }
+
+void Node::setPath(Node* newPath) { path = newPath; }
+
+Pipe * Node::getPipeTo(Node *pNode) const { return pipeTo; }
+void Node::setPipeTo(Pipe* newPipe) { pipeTo = newPipe; }

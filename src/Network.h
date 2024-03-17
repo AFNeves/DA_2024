@@ -26,6 +26,8 @@ public:
     Node *findNode(const std::string& nodeCode);
     bool addPipe(const std::string& src, const std::string& dest, int capacity);
     bool removePipe(const std::string& src, const std::string& dest);
+    bool addNode(int id, const std::string& code);
+    bool removeNode(int id, const std::string& code);
 
     /* Parsing */
 
@@ -33,11 +35,8 @@ public:
     bool readCities(const std::string &fileLocation);
     bool readReservoirs(const std::string &fileLocation);
     bool readPipes(const std::string &fileLocation);
-    bool addNode(int id, const std::string& code);
-    bool removeNode(int id, const std::string& code);
 
 private:
-
     std::unordered_map<std::string, Node *> nodeSet;
 
 };

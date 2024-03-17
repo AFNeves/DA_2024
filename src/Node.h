@@ -44,6 +44,12 @@ public:
     void addPipe(Node *dest, int capacity);
     bool removePipeTo(Node *dest);
 
+    Node* getPath() const;
+    void setPath(Node* newPath);
+
+    Pipe *getPipeTo(Node *pNode) const;
+    void setPipeTo(Pipe* newPipe);
+
 private:
 
     int id;
@@ -54,6 +60,8 @@ private:
     int num;
     int low;
     std::vector<Pipe *> adj;
+    Node* path;
+    Pipe* pipeTo;
 
 };
 

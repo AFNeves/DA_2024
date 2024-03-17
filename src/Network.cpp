@@ -72,6 +72,7 @@ bool Network::removePipe(const std::string& src, const std::string& dest)
 
 bool Network::addNode(int id, const std::string& code) {
 
+
     if (findNode(code) != nullptr)
         return false;
 
@@ -100,6 +101,7 @@ bool Network::removeNode(int id, const std::string& code) {
     delete nodeToRemove;
     return true;
 }
+
 
 /* Parsing */
 

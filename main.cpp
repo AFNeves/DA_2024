@@ -18,7 +18,7 @@ int main()
 
     return 0;
 }*/
-
+/*
 #include <iostream>
 #include <vector>
 
@@ -48,4 +48,33 @@ int main() {
     NetworkManager::determineMaxFlowToCities(reservoirs, cities, stations);
 
     return 0;
+}*/
+
+#include <iostream>
+#include "src/Network.h"
+
+int main() {
+    Network network;
+
+    // Adiciona alguns nós à rede
+    network.addNode(1, "A");
+    network.addNode(2, "B");
+    network.addNode(3, "C");
+
+    // Adiciona algumas tubulações entre os nós
+    network.addPipe("A", "B", 10);
+    network.addPipe("B", "C", 20);
+
+    // Remove um nó da rede
+    network.removeNode(2, "B");
+
+    // Verifica se o nó foi removido corretamente
+    if (network.findNode("B") == nullptr) {
+        std::cout << "Node B foi removido com sucesso.\n";
+    } else {
+        std::cout << "Erro: O nó B ainda está presente na rede.\n";
+    }
+
+    return 0;
 }
+
