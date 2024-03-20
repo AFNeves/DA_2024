@@ -5,6 +5,9 @@
 #include <unordered_map>
 
 #include "Node.h"
+#include "Reservoir.h"
+#include "City.h"
+#include "Station.h"
 
 class Network {
 public:
@@ -36,8 +39,14 @@ public:
     bool readReservoirs(const std::string &fileLocation);
     bool readPipes(const std::string &fileLocation);
 
+    const std::vector<Reservoir>& getReservoirs() const;
+    const std::vector<City>& getCities() const;
+    const std::vector<Station>& getStations() const;
 private:
     std::unordered_map<std::string, Node *> nodeSet;
+    std::vector<Reservoir> reservoirs;
+    std::vector<City> cities;
+    std::vector<Station> stations;
 
 };
 

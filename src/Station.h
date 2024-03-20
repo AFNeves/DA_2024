@@ -1,3 +1,4 @@
+// Station.h
 #ifndef STATION_H
 #define STATION_H
 
@@ -7,6 +8,9 @@ class Station : public Node {
 public:
     // Constructor with additional arguments for A and B codes
     Station(int id, std::string code, int capacity, std::string code_A, std::string code_B);
+
+    // Default constructor
+    Station() = default;
 
     // Getter para a capacidade
     int getCapacity() const { return capacity; }

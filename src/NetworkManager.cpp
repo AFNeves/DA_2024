@@ -1,7 +1,6 @@
 // NetworkManager.cpp
 #include "NetworkManager.h"
-#include "Max_Flow.h"
-#include "Graph.h"
+#include "Edmonskarp.cpp"
 #include <fstream>
 #include <map>
 #include <algorithm>
@@ -31,11 +30,11 @@ void NetworkManager::determineMaxFlowToCities(const std::vector<Reservoir>& rese
     // Calcular o fluxo máximo para cada cidade usando o algoritmo de Edmonds-Karp
     std::map<std::string, int> maxFlowToCities; // Mapa para armazenar o fluxo máximo para cada cidade
 
-    Max_Flow maxFlowCalculator; // Crie um objeto da classe Max_Flow
+    Edmonskarp maxFlowCalculator; // Crie um objeto da classe Max_Flow
 
     for (size_t i = 0; i < reservoirs.size(); ++i) {
         // Para cada reservatório, encontrar o fluxo máximo para todas as cidades
-        maxFlowCalculator.edmondsKarp(&graph, i, reservoirs.size() + cities.size()); // Use o objeto para chamar a função edmondsKarp
+        edmondsKarp(&graph, i, reservoirs.size() + cities.size()); // Use o objeto para chamar a função edmondsKarp
 
         // Atualizar o mapa de fluxo máximo para cidades
         for (const auto& city : cities) {

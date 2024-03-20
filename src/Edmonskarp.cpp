@@ -56,11 +56,12 @@ double findMinResidualAlongPath(Node *s, Node *t) {
 
     for (auto v = t; v != s; v = v->getPath()) {
         auto pipe = v->getPath()->getPipeTo(v);
-        f = std::min(f, pipe->getCapacity() - pipe->getCapacity());
+        f = std::min(f, static_cast<double>(pipe->getCapacity() - pipe->getFlow()));
     }
 
     return f;
 }
+
 
 template <class T>
 void augmentFlowAlongPath(Node *s, Node *t, double f) {

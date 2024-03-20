@@ -49,12 +49,12 @@ int main() {
 
     return 0;
 }*/
-
+/*
 #include <iostream>
 #include "src/Network.h"
 
 int main() {
-    Network network;
+    /*Network network;
 
     // Adiciona alguns nós à rede
     network.addNode(1, "A");
@@ -74,6 +74,36 @@ int main() {
     } else {
         std::cout << "Erro: O nó B ainda está presente na rede.\n";
     }
+
+    return 0;
+}
+*/
+
+
+#include "src/NetworkManager.h"
+#include "src/Reservoir.h"
+#include "src/City.h"
+#include "src/Station.h"
+#include "src/Network.h"
+#include <iostream>
+#include <vector>
+
+
+int main() {
+    // Criar instâncias de NetworkManager, Reservoir, City e Station
+    NetworkManager manager;
+    Network network;
+    std::vector<Reservoir> reservoirs;
+    std::vector<City> cities;
+    std::vector<Station> stations;
+
+    // Preencher os vetores com os dados dos arquivos CSV
+    network.readReservoirs("../data/Reservoirs_Madeira.csv");
+    network.readCities("../data/Cities_Madeira.csv");
+    network.readStations("../data/Stations_Madeira.csv");
+
+    // Chamar a função determineMaxFlowToCities
+    manager.determineMaxFlowToCities(network.getReservoirs(), network.getCities(), network.getStations());
 
     return 0;
 }

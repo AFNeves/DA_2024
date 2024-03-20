@@ -1,4 +1,4 @@
-#include "Menu.h"
+/*#include "Menu.h"
 
 #include <limits>
 #include <fstream>
@@ -106,7 +106,7 @@ void Menu::setUpPrinter(int flag) {
                  << "     3. Pick connections to remove" << endl << endl
                  << "   Select your option: ";
             break;
-            */
+            *//*
         default:
             throw invalid_argument("Invalid option selected.");
     }
@@ -405,3 +405,5 @@ void Menu::pressEnterToContinue() {
 bool Menu::isStationOutputSafe(Station* stationptr) {}
 
 // -------------------- END OF FILE -------------------- //
+
+ */

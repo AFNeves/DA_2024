@@ -14,6 +14,7 @@ using namespace std;
 
 Network::Network()
 {
+
     readCities("../data/Cities_Madeira.csv");
     readStations("../data/Stations_Madeira.csv");
     readReservoirs("../data/Reservoirs_Madeira.csv");
@@ -105,6 +106,14 @@ bool Network::removeNode(int id, const std::string& code) {
 
 /* Parsing */
 
+// Dentro do arquivo Network.cpp, antes da definição da classe Network
+
+// Valores padrão para capacidade e códigos A e B
+const int default_capacity_value = 100; // ou qualquer valor padrão desejado
+const std::string default_code_A_value = "A"; // ou qualquer valor padrão desejado
+const std::string default_code_B_value = "B"; // ou qualquer valor padrão desejado
+
+
 bool Network::readStations(const std::string &fileLocation) {
 
     std::fstream file;
@@ -115,10 +124,10 @@ bool Network::readStations(const std::string &fileLocation) {
     }
 
     std::string line;
-    getline(file, line); // Skip fist line
+    getline(file, line); // Skip first line
 
     int n = 0;
-    std::string ID, Code;
+    std::string ID, Code, Capacity; // Adicionando variável para armazenar a capacidade
 
     while (getline(file, line)) {
         if (line.empty()) continue;
@@ -127,10 +136,14 @@ bool Network::readStations(const std::string &fileLocation) {
 
         getline(ss, ID, ',');
         getline(ss, Code, ',');
+        getline(ss, Capacity, ','); // Lendo a capacidade do arquivo
 
         if (Code.empty()) continue;
 
-        nodeSet[Code] = new Station(stoi(ID), Code);
+        // Verifica se a capacidade está vazia, se sim, use um valor padrão
+        int capacity_value = Capacity.empty() ? default_capacity_value : stoi(Capacity);
+
+        nodeSet[Code] = new Station(stoi(ID), Code, capacity_value, default_code_A_value, default_code_B_value);
 
         n++;
     }
@@ -261,4 +274,19 @@ bool Network::readPipes(const std::string &fileLocation) {
 
     file.close();
     return true;
+}
+
+// Implementar o método getReservoirs
+const std::vector<Reservoir>& Network::getReservoirs() const {
+    return reservoirs;
+}
+
+// Implementar o método getCities
+const std::vector<City>& Network::getCities() const {
+    return cities;
+}
+
+// Implementar o método getStations
+const std::vector<Station>& Network::getStations() const {
+    return stations;
 }

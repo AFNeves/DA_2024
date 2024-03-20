@@ -1,4 +1,4 @@
-#ifndef MENU_H
+/*#ifndef MENU_H
 #define MENU_H
 
 #include "Network.h"
@@ -31,4 +31,4 @@ private:
 
 };
 
-#endif //MENU_H
+#endif //MENU_H*/
