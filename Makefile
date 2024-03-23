@@ -8,7 +8,7 @@ CXXFLAGS = -Wall -Wextra -std=c++11
 TARGET = main
 
 # List of source files
-SRCS = main.cpp src/Node.cpp src/Station.cpp src/Pipe.cpp src/Reservoir.cpp src/NetworkManager.cpp src/Network.cpp src/Menu.cpp src/Edmonskarp.cpp src/City.cpp
+SRCS = main.cpp src/Node.cpp src/Station.cpp src/Pipe.cpp src/Reservoir.cpp src/NetworkManager.cpp src/Network.cpp src/Edmonskarp.cpp src/City.cpp
 
 # List of object files
 OBJS = $(SRCS:.cpp=.o)

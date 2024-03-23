@@ -19,11 +19,18 @@ public:
     void setDemand(float newDemand);
     void setPopulation(std::string newPopulation);
 
+    // Método para adicionar uma tubulação de entrada à cidade
+    void addPipeIn(Pipe* pipe) { pipesIn.push_back(pipe); }
+
+    // Método para obter as tubulações de entrada da cidade
+    const std::vector<Pipe*>& getPipesIn() const { return pipesIn; }
+
 private:
 
     std::string name;
     float demand;
     std::string population;
+    std::vector<Pipe*> pipesIn;
 
 };
 

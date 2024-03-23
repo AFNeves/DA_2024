@@ -7,6 +7,7 @@
 #include "City.h"
 #include "Station.h"
 #include "Reservoir.h"
+#include "Pipe.h"
 
 using namespace std;
 
@@ -184,7 +185,7 @@ bool Network::readCities(const std::string &fileLocation) {
         if (Code.empty()) continue;
 
         nodeSet[Code] = new City(Name, stoi(ID), Code, stof(Demand), Population);
-
+        std::cout << Name << ','<< ID << ',' << Code << ',' <<  Demand << ',' << Population << std::endl;
         n++;
     }
 
@@ -289,4 +290,17 @@ const std::vector<City>& Network::getCities() const {
 // Implementar o método getStations
 const std::vector<Station>& Network::getStations() const {
     return stations;
+}
+
+// Inside Network.cpp, implement the resetFlows function:
+void Network::resetFlows() const{
+    // Iterate through all nodes in the network
+    for (auto& pair : nodeSet) {
+        Node* node = pair.second;
+        // Iterate through all adjacent pipes of the current node
+        for (auto& pipe : node->getAdj()) {
+            // Reset the flow value of the pipe to zero
+            pipe->setFlow(0);
+        }
+    }
 }

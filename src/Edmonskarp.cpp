@@ -10,8 +10,8 @@
 #include <queue>
 #include <limits>
 
-template <class T>
-void testAndVisit(std::queue<Node *> &q, Node *src, Node *dest, int capacity, double residual) {
+//template <class T>
+void Edmonskarp::testAndVisit(std::queue<Node *> &q, Node *src, Node *dest, int capacity, double residual) {
     if (!dest->isVisited() && residual > 0) {
         dest->setVisited(true);
         dest->setPath(src);
@@ -19,8 +19,8 @@ void testAndVisit(std::queue<Node *> &q, Node *src, Node *dest, int capacity, do
     }
 }
 
-template <class T>
-bool findAugmentingPath(Network &network, Node *s, Node *t) {
+//template <class T>
+bool Edmonskarp::findAugmentingPath(Network &network, Node *s, Node *t) {
     for (auto& pair : network.getNodeSet()) {
         pair.second->setVisited(false);
     }
@@ -34,14 +34,14 @@ bool findAugmentingPath(Network &network, Node *s, Node *t) {
         q.pop();
 
         for (auto& pipe : v->getAdj()) {
-            testAndVisit<T>(q, v, pipe->getDest(), pipe->getCapacity(), pipe->getCapacity() - pipe->getCapacity());
+            testAndVisit(q, v, pipe->getDest(), pipe->getCapacity(), pipe->getCapacity() - pipe->getCapacity());
         }
 
         for (auto& pair : network.getNodeSet()) {
             Node* node = pair.second;
             for (auto& pipe : node->getAdj()) {
                 if (pipe->getDest() == v) {
-                    testAndVisit<T>(q, v, node, pipe->getCapacity(), pipe->getCapacity());
+                    testAndVisit(q, v, node, pipe->getCapacity(), pipe->getCapacity());
                 }
             }
         }
@@ -50,8 +50,8 @@ bool findAugmentingPath(Network &network, Node *s, Node *t) {
     return t->isVisited();
 }
 
-template <class T>
-double findMinResidualAlongPath(Node *s, Node *t) {
+//template <class T>
+double Edmonskarp::findMinResidualAlongPath(Node *s, Node *t) {
     double f = std::numeric_limits<double>::infinity();
 
     for (auto v = t; v != s; v = v->getPath()) {
@@ -63,8 +63,8 @@ double findMinResidualAlongPath(Node *s, Node *t) {
 }
 
 
-template <class T>
-void augmentFlowAlongPath(Node *s, Node *t, double f) {
+//template <class T>
+void Edmonskarp::augmentFlowAlongPath(Node *s, Node *t, double f) {
     for (auto v = t; v != s; v = v->getPath()) {
         auto pipe = v->getPath()->getPipeTo(v);
         pipe->setCapacity(pipe->getCapacity() + f);
@@ -72,8 +72,8 @@ void augmentFlowAlongPath(Node *s, Node *t, double f) {
 }
 
 
-template <class T>
-void edmondsKarp(Network &network, const std::string &sourceCode, const std::string &targetCode) {
+//template <class T>
+void Edmonskarp::edmondsKarp(Network &network, const std::string &sourceCode, const std::string &targetCode) {
     Node *s = network.findNode(sourceCode);
     Node *t = network.findNode(targetCode);
 
@@ -87,8 +87,8 @@ void edmondsKarp(Network &network, const std::string &sourceCode, const std::str
         }
     }
 
-    while (findAugmentingPath<T>(network, s, t)) {
-        double f = findMinResidualAlongPath<T>(s, t);
-        augmentFlowAlongPath<T>(s, t, f);
+    while (findAugmentingPath(network, s, t)) {
+        double f = findMinResidualAlongPath(s, t);
+        augmentFlowAlongPath(s, t, f);
     }
 }

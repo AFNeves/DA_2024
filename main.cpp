@@ -54,7 +54,7 @@ int main() {
 #include "src/Network.h"
 
 int main() {
-    /*Network network;
+    Network network;
 
     // Adiciona alguns nós à rede
     network.addNode(1, "A");
@@ -79,7 +79,6 @@ int main() {
 }
 */
 
-
 #include "src/NetworkManager.h"
 #include "src/Reservoir.h"
 #include "src/City.h"
@@ -102,9 +101,54 @@ int main() {
     network.readCities("../data/Cities_Madeira.csv");
     network.readStations("../data/Stations_Madeira.csv");
 
+    std::cout << "Reservoirs: " << network.getReservoirs().size() << " items" << std::endl;
+    std::cout << "Cities: " << network.getCities().size() << " items" << std::endl;
+    std::cout << "Stations: " << network.getStations().size() << " items" << std::endl;
+
     // Chamar a função determineMaxFlowToCities
-    manager.determineMaxFlowToCities(network.getReservoirs(), network.getCities(), network.getStations());
+    manager.determineMaxFlowToCities(network, network.getReservoirs(), network.getCities(), network.getStations());
 
     return 0;
 }
 
+/*
+
+#include "src/Network.h"
+#include <iostream>
+
+int main() {
+    // Cria uma instância da classe Network
+    Network network;
+
+    // Lê e imprime o conteúdo do arquivo Cities_Madeira.csv
+    std::cout << "Conteúdo do arquivo Cities_Madeira.csv:" << std::endl;
+    network.readCities("data/Cities_Madeira.csv");
+    for (const auto& city : network.getCities()) {
+        std::cout << "ID: " << city.getID() << ", Nome: " << city.getName() << ", Código: " << city.getCode() << std::endl;
+    }
+    std::cout << std::endl;
+
+    // Lê e imprime o conteúdo do arquivo Stations_Madeira.csv
+    std::cout << "Conteúdo do arquivo Stations_Madeira.csv:" << std::endl;
+    network.readStations("data/Stations_Madeira.csv");
+    for (const auto& station : network.getStations()) {
+        std::cout << "ID: " << station.getID() << ", Código: " << station.getCode() << ", Capacidade: " << station.getCapacity() << std::endl;
+    }
+    std::cout << std::endl;
+
+    // Lê e imprime o conteúdo do arquivo Reservoirs_Madeira.csv
+    std::cout << "Conteúdo do arquivo Reservoirs_Madeira.csv:" << std::endl;
+    network.readReservoirs("data/Reservoirs_Madeira.csv");
+    for (const auto& reservoir : network.getReservoirs()) {
+        std::cout << "ID: " << reservoir.getID() << ", Nome: " << reservoir.getName() << ", Código: " << reservoir.getCode() << ", Município: " << reservoir.getMunicipality() << std::endl;
+    }
+    std::cout << std::endl;
+
+    // Lê e imprime o conteúdo do arquivo Pipes_Madeira.csv
+    std::cout << "Conteúdo do arquivo Pipes_Madeira.csv:" << std::endl;
+    network.readPipes("data/Pipes_Madeira.csv");
+    std::cout << "Pipes adicionados com sucesso!" << std::endl;
+
+    return 0;
+}
+*/

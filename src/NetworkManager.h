@@ -5,15 +5,17 @@
 #include "Reservoir.h"
 #include "City.h"
 #include "Station.h"
+#include "Network.h"
 #include <vector>
 #include <iostream>
 
 class NetworkManager {
 public:
     // Declaration of the function to determine the maximum amount of water that can reach each city
-    static void determineMaxFlowToCities(const std::vector<Reservoir>& reservoirs,
-                                         const std::vector<City>& cities,
-                                         const std::vector<Station>& stations);
+    void determineMaxFlowToCities(Network& network,
+                                                  const std::vector<Reservoir>& reservoirs,
+                                                  const std::vector<City>& cities,
+                                                  const std::vector<Station>& stations);
 };
 
 #endif //DA_2024_NETWORKMANAGER_H

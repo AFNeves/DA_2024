@@ -42,6 +42,9 @@ public:
     const std::vector<Reservoir>& getReservoirs() const;
     const std::vector<City>& getCities() const;
     const std::vector<Station>& getStations() const;
+
+    void resetFlows()const;
+
 private:
     std::unordered_map<std::string, Node *> nodeSet;
     std::vector<Reservoir> reservoirs;
