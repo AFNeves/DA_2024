@@ -97,9 +97,9 @@ int main() {
     std::vector<Station> stations;
 
     // Preencher os vetores com os dados dos arquivos CSV
-    network.readReservoirs("../data/Reservoirs_Madeira.csv");
-    network.readCities("../data/Cities_Madeira.csv");
-    network.readStations("../data/Stations_Madeira.csv");
+    network.readReservoirs("data/Reservoirs_Madeira.csv");
+    network.readCities("data/Cities_Madeira.csv");
+    network.readStations("data/Stations_Madeira.csv");
 
     std::cout << "Reservoirs: " << network.getReservoirs().size() << " items" << std::endl;
     std::cout << "Cities: " << network.getCities().size() << " items" << std::endl;

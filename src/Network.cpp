@@ -145,7 +145,7 @@ bool Network::readStations(const std::string &fileLocation) {
         int capacity_value = Capacity.empty() ? default_capacity_value : stoi(Capacity);
 
         nodeSet[Code] = new Station(stoi(ID), Code, capacity_value, default_code_A_value, default_code_B_value);
-
+        stations.emplace_back(stoi(ID), Code, capacity_value, default_code_A_value, default_code_B_value);
         n++;
     }
 
@@ -185,6 +185,7 @@ bool Network::readCities(const std::string &fileLocation) {
         if (Code.empty()) continue;
 
         nodeSet[Code] = new City(Name, stoi(ID), Code, stof(Demand), Population);
+        cities.emplace_back(Name, stoi(ID), Code, stof(Demand), Population);
         std::cout << Name << ','<< ID << ',' << Code << ',' <<  Demand << ',' << Population << std::endl;
         n++;
     }
@@ -224,6 +225,8 @@ bool Network::readReservoirs(const std::string &fileLocation) {
         if (Code.empty()) continue;
 
         nodeSet[Code] = new Reservoir(Name, Municipality, stoi(ID), Code, stoi(MaxDelivery));
+
+        reservoirs.emplace_back(Name, Municipality, stoi(ID), Code, stoi(MaxDelivery));
 
         n++;
     }
