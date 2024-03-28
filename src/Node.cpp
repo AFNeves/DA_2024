@@ -4,7 +4,7 @@
 /* Constructor */
 
 Node::Node(int id, std::string code) : id(id), code(std::move(code)),
-    visited(false), processing(false), indegree(0), num(0), low(0) {}
+    visited(false), processing(false), indegree(0), num(0), low(0), parent(nullptr) {}
 
 /* Destructor */
 
@@ -24,7 +24,9 @@ int Node::getIndegree() const { return indegree; }
 
 int Node::getNum() const { return num; }
 
-int Node::getLow() const { return low;}
+int Node::getLow() const { return low; }
+
+Node *Node::getParent() const { return parent; }
 
 const std::vector<Pipe *> &Node::getAdj() const { return adj; }
 
@@ -43,6 +45,8 @@ void Node::setIndegree(int newIndegree) { indegree = newIndegree; }
 void Node::setNum(int newNum) { num = newNum; }
 
 void Node::setLow(int newLow) { low = newLow; }
+
+void Node::setParent(Node *newParent) { parent = newParent; }
 
 void Node::setAdj(std::vector<Pipe *> &newAdj) { adj = newAdj; }
 
@@ -68,4 +72,13 @@ bool Node::removePipeTo(Node *dest)
             return true;
         }
     return false;
+}
+
+Pipe* Node::getPipeTo(Node *dest)
+{
+    for (auto pipe : adj)
+    {
+        if (pipe->dest == dest) return pipe;
+    }
+    return nullptr;
 }

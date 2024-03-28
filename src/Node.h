@@ -25,6 +25,7 @@ public:
     int getIndegree() const;
     int getNum() const;
     int getLow() const;
+    Node *getParent() const;
     const std::vector<Pipe *> &getAdj() const;
 
     /* Setters */
@@ -35,6 +36,7 @@ public:
     void setIndegree(int indegree);
     void setNum(int num);
     void setLow(int low);
+    void setParent(Node *parent);
     void setAdj(std::vector<Pipe *> &adj);
 
     /* Operators */
@@ -44,6 +46,7 @@ public:
     /* Functions */
     void addPipe(Node *dest, int capacity);
     bool removePipeTo(Node *dest);
+    Pipe* getPipeTo(Node *dest);
 
 private:
 
@@ -54,6 +57,7 @@ private:
     int indegree;
     int num;
     int low;
+    Node* parent;
     std::vector<Pipe *> adj;
 
 };
