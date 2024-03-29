@@ -26,9 +26,9 @@ public:
     Node *findNode(const std::string& nodeCode);
     bool addPipe(const std::string& src, const std::string& dest, int capacity);
     bool removePipe(const std::string& src, const std::string& dest);
+    void resetNetwork();
 
     /* Parsing */
-
     bool readStations(const std::string &fileLocation);
     bool readCities(const std::string &fileLocation);
     bool readReservoirs(const std::string &fileLocation);
