@@ -1,6 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
+#include <queue>
 #include <string>
 #include <unordered_map>
 
@@ -33,6 +34,12 @@ public:
     bool readCities(const std::string &fileLocation);
     bool readReservoirs(const std::string &fileLocation);
     bool readPipes(const std::string &fileLocation);
+
+    /* Max-Flow */
+    bool findAugmentingPath(Node *s, Node *t);
+    int findMinResidualAlongPath(Node *s, Node *t);
+    void augmentFlowAlongPath(Node *s, Node *t, int f);
+    int edmondsKarp(Node *s, Node *t);
 
 private:
 
