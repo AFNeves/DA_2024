@@ -30,4 +30,4 @@ void Pipe::setResidual(int newResidual) { residual = newResidual; }
 
 /* Functions */
 
-void Pipe::resetPipe() { flow = 0; residual = 0; }
+void Pipe::resetPipe() { flow = 0; residual = capacity; }
