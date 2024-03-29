@@ -82,3 +82,13 @@ Pipe* Node::getPipeTo(Node *dest)
     }
     return nullptr;
 }
+
+void Node::resetNode()
+{
+    visited = false;
+    processing = false;
+    indegree = 0;
+    num = 0;
+    low = 0;
+    parent = nullptr;
+}

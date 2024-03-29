@@ -27,3 +27,7 @@ void Pipe::setFlow(int newFlow) { flow = newFlow; }
 void Pipe::setCapacity(int newCapacity) { capacity = newCapacity; }
 
 void Pipe::setResidual(int newResidual) { residual = newResidual; }
+
+/* Functions */
+
+void Pipe::resetPipe() { flow = 0; residual = 0; }

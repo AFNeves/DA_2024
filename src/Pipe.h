@@ -25,6 +25,9 @@ public:
     void setCapacity(int newCapacity);
     void setResidual(int newResidual);
 
+    /* Functions */
+    void resetPipe();
+
 private:
 
     Node *src;
