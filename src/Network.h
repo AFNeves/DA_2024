@@ -4,8 +4,13 @@
 #include <queue>
 #include <string>
 #include <unordered_map>
+#include <iostream>
+#include "City.h"
+#include "Reservoir.h"
 
 #include "Node.h"
+
+using namespace std;
 
 class Network {
 public:
@@ -40,6 +45,9 @@ public:
     int findMinResidualAlongPath(Node *s, Node *t);
     void augmentFlowAlongPath(Node *s, Node *t, int f);
     int edmondsKarp(Node *s, Node *t);
+
+    /*Deficit*/
+    static void checkWaterSupply(Network& network);
 
 private:
 

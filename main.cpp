@@ -17,5 +17,7 @@ int main()
 
     cout << "\nMax Flow between " << s->getCode() << " and " << t->getCode() << ": " << maxFlow << endl;
 
+    Network::checkWaterSupply(network);
+
     return 0;
 }

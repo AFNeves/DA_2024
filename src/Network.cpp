@@ -76,3 +76,31 @@ void Network::resetNetwork()
         for (auto pipe : node->getAdj()) { pipe->resetPipe(); }
     }
 }
+
+void Network::checkWaterSupply(Network& network) {
+    // Initialize a map to store the demand of each city
+    unordered_map<string, int> cityDemands;
+
+    // Retrieve demand for each city
+    for (const auto& pair : network.getNodeSet()) {
+        if (City* city = dynamic_cast<City*>(pair.second)) {
+            cityDemands[city->getCode()] = city->getDemand();
+        }
+    }
+
+    // Calculate the maximum flow from reservoirs to cities
+    for (const auto& pair : network.getNodeSet()) {
+        if (Reservoir* reservoir = dynamic_cast<Reservoir*>(pair.second)) {
+            for (const auto& pair2 : network.getNodeSet()) {
+                if (City* city = dynamic_cast<City*>(pair2.second)) {
+                    int maxFlow = network.edmondsKarp(reservoir, city);
+                    // Compare with city demand
+                    if (maxFlow < cityDemands[city->getCode()]) {
+                        int deficit = cityDemands[city->getCode()] - maxFlow;
+                        cout << "City: " << city->getCode() << ", Deficit: " << deficit << endl;
+                    }
+                }
+            }
+        }
+    }
+}
