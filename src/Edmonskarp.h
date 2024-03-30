@@ -16,7 +16,8 @@
 
 class Edmonskarp {
 public:
-    void testAndVisit(std::queue<Node *> &q, Node *src, Node *dest, int capacity, double residual);
+
+    void testAndVisit(std::queue<Node *> &q, Node *src, Node *dest, double residual);
 
     bool findAugmentingPath(Network &network, Node *s, Node *t);
 

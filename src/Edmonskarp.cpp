@@ -11,7 +11,7 @@
 #include <limits>
 
 //template <class T>
-void Edmonskarp::testAndVisit(std::queue<Node *> &q, Node *src, Node *dest, int capacity, double residual) {
+void Edmonskarp::testAndVisit(std::queue<Node *> &q, Node *src, Node *dest, double residual) {
     if (!dest->isVisited() && residual > 0) {
         dest->setVisited(true);
         dest->setPath(src);
@@ -34,14 +34,14 @@ bool Edmonskarp::findAugmentingPath(Network &network, Node *s, Node *t) {
         q.pop();
 
         for (auto& pipe : v->getAdj()) {
-            testAndVisit(q, v, pipe->getDest(), pipe->getCapacity(), pipe->getCapacity() - pipe->getCapacity());
+            testAndVisit(q, v, pipe->getDest(), pipe->getCapacity());
         }
 
         for (auto& pair : network.getNodeSet()) {
             Node* node = pair.second;
             for (auto& pipe : node->getAdj()) {
                 if (pipe->getDest() == v) {
-                    testAndVisit(q, v, node, pipe->getCapacity(), pipe->getCapacity());
+                    testAndVisit(q, v, node, pipe->getCapacity());
                 }
             }
         }
@@ -56,7 +56,7 @@ double Edmonskarp::findMinResidualAlongPath(Node *s, Node *t) {
 
     for (auto v = t; v != s; v = v->getPath()) {
         auto pipe = v->getPath()->getPipeTo(v);
-        f = std::min(f, static_cast<double>(pipe->getCapacity() - pipe->getFlow()));
+        f = std::min(f, static_cast<double>(pipe->getCapacity()));
     }
 
     return f;
