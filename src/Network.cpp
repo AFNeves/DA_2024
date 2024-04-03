@@ -1,3 +1,4 @@
+#include <valarray>
 #include "Network.h"
 
 #include "Node.h"
@@ -97,5 +98,61 @@ void Network::checkWaterSupply(Network& network) {
 
         }
     }
+}
+
+void Network::balanceFlow() {
+    vector<int> differences;  // Diferenças entre capacidade e fluxo
+    int totalDifference = 0;  // Total de diferenças
+    int maxDifference = 0;     // Máxima diferença encontrada
+
+    // Calcular as diferenças e encontrar a máxima diferença
+    for (const auto& pair : nodeSet) {
+        if (Pipe* pipe = dynamic_cast<Pipe*>(pair.second)) {
+            int capacity = pipe->getCapacity();
+            int flow = pipe->getFlow();
+            int difference = capacity - flow;
+            differences.push_back(difference);
+            totalDifference += difference;
+            maxDifference = max(maxDifference, difference);
+        }
+    }
+
+    // Calcular a média das diferenças
+    double averageDifference = totalDifference / differences.size();
+
+    // Calcular a variância das diferenças
+    double variance = 0;
+    for (int diff : differences) {
+        variance += pow(diff - averageDifference, 2);
+    }
+    variance /= differences.size();
+
+    // Imprimir métricas antes do balanceamento
+    cout << "Before balancing:" << endl;
+    cout << "Average difference: " << averageDifference << endl;
+    cout << "Variance: " << variance << endl;
+    cout << "Max difference: " << maxDifference << endl;
+
+    // Balancear o fluxo
+    for (const auto& pair : nodeSet) {
+        if (Pipe* pipe = dynamic_cast<Pipe*>(pair.second)) {
+            int capacity = pipe->getCapacity();
+            int flow = pipe->getFlow();
+            int difference = capacity - flow;
+            if (difference > maxDifference * 0.9) {
+                // Redistribuir o fluxo para outras tubulações
+                // (Implementação depende da estratégia de redistribuição escolhida)
+                // Aqui, podemos simplesmente definir o fluxo para metade da capacidade
+                pipe->setFlow(capacity / 2);
+            }
+        }
+    }
+
+    // Recalcular as métricas após o balanceamento
+    // (Pode ser feito da mesma maneira que antes)
+
+    // Imprimir métricas após o balanceamento
+    cout << "\nAfter balancing:" << endl;
+    // Imprimir métricas recalculadas
 }
 

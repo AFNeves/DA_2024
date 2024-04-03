@@ -32,7 +32,10 @@ bool Network::findAugmentingPath(Node *s, Node *t)
             {
                 neighbour->setVisited(true);
                 neighbour->setParent(current);
-                if (neighbour == t) return true;
+                if (neighbour == t && pipe->getSrc()->getParent() == s) {
+                    std::cout << "Found augmenting path to destination city: " << t->getParent()->getCode() << ' ' << s->getCode() << std::endl;
+                    return true;
+                }
                 q.push(neighbour);
             }
         }

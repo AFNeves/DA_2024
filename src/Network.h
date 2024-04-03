@@ -49,6 +49,8 @@ public:
     /*Deficit*/
     static void checkWaterSupply(Network& network);
 
+    /* BalanceFlow */
+    void balanceFlow();
 private:
 
     std::unordered_map<std::string, Node *> nodeSet;
