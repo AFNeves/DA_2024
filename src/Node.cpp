@@ -4,7 +4,7 @@
 /* Constructor */
 
 Node::Node(int id, std::string code) : id(id), code(std::move(code)),
-    visited(false), processing(false), indegree(0), num(0), low(0), parent(nullptr) {}
+    visited(false), processing(false), indegree(0), num(0), low(0), capacity(INT16_MAX), parent(nullptr) {}
 
 /* Destructor */
 
@@ -26,6 +26,8 @@ int Node::getNum() const { return num; }
 
 int Node::getLow() const { return low; }
 
+int Node::getCapacity() const { return capacity; }
+
 Node *Node::getParent() const { return parent; }
 
 const std::vector<Pipe *> &Node::getAdj() const { return adj; }
@@ -46,6 +48,8 @@ void Node::setNum(int newNum) { num = newNum; }
 
 void Node::setLow(int newLow) { low = newLow; }
 
+void Node::setCapacity(int newCapacity) { capacity = newCapacity; }
+
 void Node::setParent(Node *newParent) { parent = newParent; }
 
 void Node::setAdj(std::vector<Pipe *> &newAdj) { adj = newAdj; }
@@ -58,9 +62,9 @@ bool Node::operator!=(const Node &rhs) const { return id != rhs.id || code != rh
 
 /* Functions */
 
-void Node::addPipe(Node *dest, int capacity)
+void Node::addPipe(Node *dest, int cap)
 {
-    adj.push_back(new Pipe(this, dest, capacity));
+    adj.push_back(new Pipe(this, dest, cap));
 }
 
 bool Node::removePipeTo(Node *dest)

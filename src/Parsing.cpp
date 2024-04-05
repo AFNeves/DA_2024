@@ -75,7 +75,10 @@ bool Network::readCities(const std::string &fileLocation) {
 
         if (Code.empty()) continue;
 
-        nodeSet[Code] = new City(Name, stoi(ID), Code, stof(Demand), Population);
+        auto city = new City(Name, stoi(ID), Code, stof(Demand), Population);
+        city->setCapacity(stoi(Demand));
+
+        nodeSet[Code] = city;
 
         n++;
     }
@@ -114,7 +117,10 @@ bool Network::readReservoirs(const std::string &fileLocation) {
 
         if (Code.empty()) continue;
 
-        nodeSet[Code] = new Reservoir(Name, Municipality, stoi(ID), Code, stoi(MaxDelivery));
+        auto reservoir = new Reservoir(Name, Municipality, stoi(ID), Code, stoi(MaxDelivery));
+        reservoir->setCapacity(stoi(MaxDelivery));
+
+        nodeSet[Code] = reservoir;
 
         n++;
     }

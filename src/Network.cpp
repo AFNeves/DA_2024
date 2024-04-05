@@ -13,6 +13,7 @@ Network::Network()
     readStations("../data/Stations_Madeira.csv");
     readReservoirs("../data/Reservoirs_Madeira.csv");
     readPipes("../data/Pipes_Madeira.csv");
+    readSuperElements();
 }
 
 /* Destructor */
