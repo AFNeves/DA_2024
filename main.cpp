@@ -9,9 +9,10 @@ using namespace std;
 int main()
 {
     Network network;
+    network.readSuperElements();
 
-    Node *s = network.findNode("R_1");
-    Node *t = network.findNode("C_10");
+    Node *s = network.findNode("S_SRC");
+    Node *t = network.findNode("S_SINK");
 
     int maxFlow = network.edmondsKarp(s,t);
 

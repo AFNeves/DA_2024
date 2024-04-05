@@ -34,6 +34,7 @@ public:
     bool readCities(const std::string &fileLocation);
     bool readReservoirs(const std::string &fileLocation);
     bool readPipes(const std::string &fileLocation);
+    bool readSuperElements();
 
     /* Max-Flow */
     bool findAugmentingPath(Node *s, Node *t);

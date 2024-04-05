@@ -167,3 +167,23 @@ bool Network::readPipes(const std::string &fileLocation) {
     file.close();
     return true;
 }
+
+bool Network::readSuperElements()
+{
+    auto src = new Node(0, "S_SRC");
+    auto sink = new Node(0, "S_SINK");
+
+    for (auto pair : nodeSet)
+    {
+        if (pair.second->getCode().substr(0,1) == "R")
+            src->addPipe(pair.second, INT16_MAX);
+
+        if (pair.second->getCode().substr(0,1) == "C")
+            pair.second->addPipe(sink, INT16_MAX);
+    }
+
+    nodeSet["S_SRC"] = src;
+    nodeSet["S_SINK"] = sink;
+
+    return true;
+}
