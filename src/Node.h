@@ -40,7 +40,7 @@ public:
     bool operator!=(const Node &rhs) const;
 
     /* Functions */
-    void addPipe(Node *dest, int capacity, bool direction);
+    void addPipe(Node *dest, int capacity);
     bool removePipeTo(Node *dest);
     Pipe* getPipeTo(Node *dest);
     void resetNode();

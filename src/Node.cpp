@@ -50,9 +50,9 @@ bool Node::operator!=(const Node &rhs) const { return id != rhs.id || code != rh
 
 /* Functions */
 
-void Node::addPipe(Node *dest, int cap, bool direction)
+void Node::addPipe(Node *dest, int cap)
 {
-    adj.push_back(new Pipe(this, dest, cap, direction));
+    adj.push_back(new Pipe(this, dest, cap));
 }
 
 bool Node::removePipeTo(Node *dest)
