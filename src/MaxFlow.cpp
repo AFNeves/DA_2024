@@ -2,7 +2,6 @@
 
 #include "Pipe.h"
 
-#include <limits>
 #include <stdexcept>
 
 using namespace std;
@@ -45,13 +44,17 @@ int Network::findMinResidualAlongPath(Node *s, Node *t)
 {
     Node *current = t;
 
-    int minResidual = numeric_limits<int>::max();
+    int minResidual = current->getCapacity();
 
     while (current != s)
     {
         Pipe *pipe = current->getParent()->getPipeTo(current);
+
         minResidual = min(minResidual, pipe->getResidual());
+
         current = current->getParent();
+
+        minResidual = min(minResidual, current->getCapacity());
     }
 
     return minResidual;
@@ -61,9 +64,13 @@ void Network::augmentFlowAlongPath(Node *s, Node *t, int f)
 {
     Node *current = t;
 
+    current->setCapacity(current->getCapacity() - f);
+
     while (current != s)
     {
         Node *parent = current->getParent();
+
+        parent->setCapacity(parent->getCapacity() - f);
 
         Pipe *pipe = parent->getPipeTo(current);
         pipe->setFlow(pipe->getFlow() + f);
