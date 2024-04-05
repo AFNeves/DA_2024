@@ -2,7 +2,7 @@
 
 #include "Pipe.h"
 
-#include <stdexcept>
+#include <queue>
 
 using namespace std;
 
@@ -27,7 +27,7 @@ bool Network::findAugmentingPath(Node *s, Node *t)
         {
             Node *neighbour = pipe->getDest();
 
-            if (!neighbour->isVisited() && pipe->getResidual() > 0)
+            if (!neighbour->isVisited() && pipe->getResidual() > 0 && neighbour->getCapacity() > 0)
             {
                 neighbour->setVisited(true);
                 neighbour->setParent(current);
