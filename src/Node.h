@@ -21,11 +21,8 @@ public:
     int getID() const;
     std::string getCode() const;
     bool isVisited() const;
-    bool isProcessing() const;
-    int getIndegree() const;
-    int getNum() const;
-    int getLow() const;
     int getCapacity() const;
+    int getCapacityValue() const;
     Node *getParent() const;
     const std::vector<Pipe *> &getAdj() const;
 
@@ -33,11 +30,8 @@ public:
     void setID(int newID);
     void setCode(std::string newCode);
     void setVisited(bool visited);
-    void setProcessing(bool processing);
-    void setIndegree(int indegree);
-    void setNum(int num);
-    void setLow(int low);
     void setCapacity(int capacity);
+    void setCapacityValue(int capacityValue);
     void setParent(Node *parent);
     void setAdj(std::vector<Pipe *> &adj);
 
@@ -46,7 +40,7 @@ public:
     bool operator!=(const Node &rhs) const;
 
     /* Functions */
-    void addPipe(Node *dest, int capacity);
+    void addPipe(Node *dest, int capacity, bool direction);
     bool removePipeTo(Node *dest);
     Pipe* getPipeTo(Node *dest);
     void resetNode();
@@ -56,11 +50,8 @@ private:
     int id;
     std::string code;
     bool visited;
-    bool processing;
-    int indegree;
-    int num;
-    int low;
     int capacity;
+    int capacityValue;
     Node* parent;
     std::vector<Pipe *> adj;
 

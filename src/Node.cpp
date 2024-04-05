@@ -4,7 +4,7 @@
 /* Constructor */
 
 Node::Node(int id, std::string code) : id(id), code(std::move(code)),
-    visited(false), processing(false), indegree(0), num(0), low(0), capacity(INT16_MAX), parent(nullptr) {}
+    visited(false), capacity(INT16_MAX), capacityValue(INT16_MAX), parent(nullptr) {}
 
 /* Destructor */
 
@@ -18,15 +18,9 @@ std::string Node::getCode() const { return code; }
 
 bool Node::isVisited() const { return visited; }
 
-bool Node::isProcessing() const { return processing; }
-
-int Node::getIndegree() const { return indegree; }
-
-int Node::getNum() const { return num; }
-
-int Node::getLow() const { return low; }
-
 int Node::getCapacity() const { return capacity; }
+
+int Node::getCapacityValue() const { return capacityValue; }
 
 Node *Node::getParent() const { return parent; }
 
@@ -40,15 +34,9 @@ void Node::setCode(std::string newCode) { code = std::move(newCode); }
 
 void Node::setVisited(bool boolean) { visited = boolean; }
 
-void Node::setProcessing(bool boolean) { processing = boolean; }
-
-void Node::setIndegree(int newIndegree) { indegree = newIndegree; }
-
-void Node::setNum(int newNum) { num = newNum; }
-
-void Node::setLow(int newLow) { low = newLow; }
-
 void Node::setCapacity(int newCapacity) { capacity = newCapacity; }
+
+void Node::setCapacityValue(int newCapacityValue) { capacityValue = newCapacityValue; }
 
 void Node::setParent(Node *newParent) { parent = newParent; }
 
@@ -62,9 +50,9 @@ bool Node::operator!=(const Node &rhs) const { return id != rhs.id || code != rh
 
 /* Functions */
 
-void Node::addPipe(Node *dest, int cap)
+void Node::addPipe(Node *dest, int cap, bool direction)
 {
-    adj.push_back(new Pipe(this, dest, cap));
+    adj.push_back(new Pipe(this, dest, cap, direction));
 }
 
 bool Node::removePipeTo(Node *dest)
@@ -90,9 +78,6 @@ Pipe* Node::getPipeTo(Node *dest)
 void Node::resetNode()
 {
     visited = false;
-    processing = false;
-    indegree = 0;
-    num = 0;
-    low = 0;
+    capacity = capacityValue;
     parent = nullptr;
 }
