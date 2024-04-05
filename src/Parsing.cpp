@@ -154,7 +154,7 @@ bool Network::readPipes(const std::string &fileLocation) {
         getline(ss, SRC, ',');
         getline(ss, DEST, ',');
         getline(ss, Capacity, ',');
-        getline(ss, Direction, ',');
+        getline(ss, Direction, '\r');
 
         Node *src = findNode(SRC);
         Node *dest = findNode(DEST);
@@ -163,7 +163,7 @@ bool Network::readPipes(const std::string &fileLocation) {
 
         src->addPipe(dest, stoi(Capacity));
 
-        if (Direction == "1") { dest->addPipe(src, stoi(Capacity)); }
+        if (Direction == "0") { dest->addPipe(src, 0); n++; }
 
         n++;
     }
