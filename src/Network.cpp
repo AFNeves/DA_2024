@@ -30,8 +30,6 @@ void Network::setNodeSet(unordered_map<string, Node *> &newNodeSet) { nodeSet = 
 
 /* Functions */
 
-int Network::getNumNodes() const { return (int) nodeSet.size(); }
-
 Node *Network::findNode(const std::string& nodeCode)
 {
     auto it = nodeSet.find(nodeCode);
@@ -70,10 +68,7 @@ void Network::resetNetwork()
 {
     for (const auto& pair : nodeSet)
     {
-        Node *node = pair.second;
-
-        node->resetNode();
-
-        for (auto pipe : node->getAdj()) { pipe->resetPipe(); }
+        pair.second->resetNode();
+        for (auto pipe : pair.second->getAdj()) { pipe->resetPipe(); }
     }
 }
