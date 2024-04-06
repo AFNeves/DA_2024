@@ -37,6 +37,7 @@ public:
     void setNodeSet(std::unordered_map<std::string, Node *> &nodeSet);
 
     /* Functions */
+    void deleteNetwork();
     void createNetwork(const std::string& dataPath, bool small);
     Node *findNode(const std::string& nodeCode);
     void resetNetwork();

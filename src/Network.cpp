@@ -14,7 +14,7 @@ Network::Network()
 
 /* Destructor */
 
-Network::~Network() { for(auto& pair : nodeSet) { delete pair.second; } }
+Network::~Network() { deleteNetwork(); delete superSrc; delete superSink; }
 
 /* Getters */
 
@@ -46,22 +46,34 @@ void Network::setNodeSet(unordered_map<string, Node *> &newNodeSet) { nodeSet = 
 
 /* Functions */
 
+void Network::deleteNetwork()
+{
+    auto it1 = nodeSet.find("S_SRC");
+    auto it2 = nodeSet.find("S_SINK");
+    if (it1 != nodeSet.end() && it2 != nodeSet.end()) {
+        nodeSet.erase(it1); nodeSet.erase(it2);
+    }
+
+    for (auto pipe : superSrc->adj)
+        delete pipe;
+    superSrc->adj.clear();
+
+    for (const auto &pair: nodeSet)
+        delete pair.second;
+    nodeSet.clear();
+
+    citySet.clear();
+    stationSet.clear();
+    reservoirSet.clear();
+}
+
 void Network::createNetwork(const std::string &dataPath, bool small)
 {
-    if (small)
-    {
-        readCities("../data/small/Cities_Madeira.csv");
-        readStations("../data/small/Stations_Madeira.csv");
-        readReservoirs("../data/small/Reservoirs_Madeira.csv");
-        readPipes("../data/small/Pipes_Madeira.csv");
-    }
-    else
-    {
-        readCities(dataPath + "Cities.csv");
-        readStations(dataPath + "Stations.csv");
-        readReservoirs(dataPath + "Reservoir.csv");
-        readPipes(dataPath + "Pipes.csv");
-    }
+    deleteNetwork();
+    readCities(small ? "../data/small/Cities_Madeira.csv" : dataPath + "Cities.csv");
+    readStations(small ? "../data/small/Stations_Madeira.csv" : dataPath + "Stations.csv");
+    readReservoirs(small ? "../data/small/Reservoirs_Madeira.csv" : dataPath + "Reservoir.csv");
+    readPipes(small ? "../data/small/Pipes_Madeira.csv" : dataPath + "Pipes.csv");
     readSuperElements();
 }
 

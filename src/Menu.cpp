@@ -76,6 +76,7 @@ void Menu::setUpCustom() {
 }
 
 void Menu::setUpPrinter(int flag) {
+    system("clear || cls");
     switch (flag) {
         case 0:
             cout << endl
@@ -139,6 +140,10 @@ void Menu::mainMenu(bool isLoading) {
             case 2:
                 //lineFailuresMenu();
                 return;
+            case 9:
+                if (confirmChoice()) setUpMenu();
+                else mainMenu(false);
+                return;
             default:
                 cout << endl << "   Please select a valid option : ";
                 while (!(cin >> input)) {
@@ -165,6 +170,7 @@ void Menu::mainMenuOptions(bool isLoading) {
     cout << "   Please select your desired option by typing it on the selector intake" << endl << endl
          << "     1. Basic Service Metrics" << endl << endl
          << "     2. Reliability and Sensitivity to Failures" << endl << endl << endl
+         << "     9. Change Data Set" << endl << endl
          << "     0. Exit application" << endl << endl
          << "   Select your option : ";
 }
@@ -421,12 +427,13 @@ City* Menu::receiveCity() {
     while(true);
 }
 
-/*
-
 bool Menu::confirmChoice() {
     int input;
 
     cout << endl
+         << "   -------------------------" << endl << endl
+         << "   ! WARNING !" << endl << endl
+         << "   You're about to change the data set!" << endl << endl
          << "     1. Confirm" << endl << endl
          << "     2. Go back" << endl << endl
          << "   Select your option : ";
@@ -452,8 +459,6 @@ bool Menu::confirmChoice() {
     }
     while(true);
 }
-
-*/
 
 void Menu::pressEnterToReturn() {
     cout << endl << "   Press ENTER to return...";

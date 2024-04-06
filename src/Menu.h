@@ -32,7 +32,7 @@ public:
     */
 
     City* receiveCity();
-    //static bool confirmChoice();
+    static bool confirmChoice();
     static void pressEnterToReturn();
 
 private:
