@@ -42,10 +42,10 @@ public:
     void resetNetwork();
 
     /* Parsing */
-    bool readStations(const std::string &fileLocation);
-    bool readCities(const std::string &fileLocation);
-    bool readReservoirs(const std::string &fileLocation);
-    bool readPipes(const std::string &fileLocation);
+    void readStations(const std::string &fileLocation);
+    void readCities(const std::string &fileLocation);
+    void readReservoirs(const std::string &fileLocation);
+    void readPipes(const std::string &fileLocation);
     void readSuperElements();
 
     /* Max-Flow */

@@ -59,7 +59,7 @@ void Network::createNetwork(const std::string &dataPath, bool small)
     {
         readCities(dataPath + "Cities.csv");
         readStations(dataPath + "Stations.csv");
-        readReservoirs(dataPath + "Reservoirs.csv");
+        readReservoirs(dataPath + "Reservoir.csv");
         readPipes(dataPath + "Pipes.csv");
     }
     readSuperElements();

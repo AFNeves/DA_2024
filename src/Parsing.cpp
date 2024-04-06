@@ -11,19 +11,24 @@
 
 using namespace std;
 
-bool Network::readStations(const std::string &fileLocation) {
+void filterString(string& input) {
+    string temp;
+    for (char c : input)
+        if (isalnum(c) || c == '_')
+            temp += c;
+    input = temp;
+}
+
+void Network::readStations(const std::string &fileLocation) {
 
     std::fstream file;
     file.open(fileLocation, ios::in);
-    if (!file.is_open()) {
-        std::cout << "ERROR - The function \"readStations\" could not read the data" << std::endl;
-        return false;
-    }
+    if (!file.is_open())
+        throw runtime_error("ERROR - The function \"readStations\" could not read the data");
 
     std::string line;
     getline(file, line); // Skip fist line
 
-    int n = 0;
     std::string ID, Code;
 
     while (getline(file, line)) {
@@ -32,16 +37,15 @@ bool Network::readStations(const std::string &fileLocation) {
         std::istringstream ss(line);
 
         getline(ss, ID, ',');
-        getline(ss, Code, ',');
+        getline(ss, Code);
+        filterString(Code);
 
-        if (Code.empty()) continue;
+        if (ID.empty() || Code.empty()) continue;
 
         auto station = new Station(stoi(ID), Code);
 
         nodeSet[Code] = station;
         stationSet.push_back(station);
-
-        n++;
     }
 
     std::sort(stationSet.begin(), stationSet.end(), [](Station* a, Station* b) {
@@ -49,22 +53,18 @@ bool Network::readStations(const std::string &fileLocation) {
     });
 
     file.close();
-    return true;
 }
 
-bool Network::readCities(const std::string &fileLocation) {
+void Network::readCities(const std::string &fileLocation) {
 
     std::fstream file;
     file.open(fileLocation, ios::in);
-    if (!file.is_open()) {
-        std::cout << "ERROR - The function \"readCities\" could not read the data" << std::endl;
-        return false;
-    }
+    if (!file.is_open())
+        throw runtime_error("ERROR - The function \"readCities\" could not read the data");
 
     std::string line;
     getline(file, line); // Skip fist line
 
-    int n = 0;
     std::string ID, Code, Name, Demand, Population;
 
     while (getline(file, line)) {
@@ -77,17 +77,16 @@ bool Network::readCities(const std::string &fileLocation) {
         getline(ss, Code, ',');
         getline(ss, Demand, ',');
         getline(ss, Population, '\"');
-        getline(ss, Population, '\"');
+        getline(ss, Population);
+        filterString(Population);
 
-        if (Code.empty()) continue;
+        if (Name.empty() || ID.empty() || Code.empty() || Demand.empty() || Population.empty()) continue;
 
         auto city = new City(Name, stoi(ID), Code, stof(Demand), Population);
         city->setCapacity(stoi(Demand)); city->setCapacityValue(stoi(Demand));
 
         nodeSet[Code] = city;
         citySet.push_back(city);
-
-        n++;
     }
 
     std::sort(citySet.begin(), citySet.end(), [](City* a, City* b) {
@@ -95,22 +94,18 @@ bool Network::readCities(const std::string &fileLocation) {
     });
 
     file.close();
-    return true;
 }
 
-bool Network::readReservoirs(const std::string &fileLocation) {
+void Network::readReservoirs(const std::string &fileLocation) {
 
     std::fstream file;
     file.open(fileLocation, ios::in);
-    if (!file.is_open()) {
-        std::cout << "ERROR - The function \"readReservoirs\" could not read the data" << std::endl;
-        return false;
-    }
+    if (!file.is_open())
+        throw runtime_error("ERROR - The function \"readReservoirs\" could not read the data");
 
     std::string line;
     getline(file, line); // Skip fist line
 
-    int n = 0;
     std::string ID, Code, Name, Municipality, MaxDelivery;
 
     while (getline(file, line)) {
@@ -122,17 +117,16 @@ bool Network::readReservoirs(const std::string &fileLocation) {
         getline(ss, Municipality, ',');
         getline(ss, ID, ',');
         getline(ss, Code, ',');
-        getline(ss, MaxDelivery, ',');
+        getline(ss, MaxDelivery);
+        filterString(MaxDelivery);
 
-        if (Code.empty()) continue;
+        if (Name.empty() || Municipality.empty() || ID.empty() || Code.empty() || MaxDelivery.empty()) continue;
 
         auto reservoir = new Reservoir(Name, Municipality, stoi(ID), Code, stoi(MaxDelivery));
         reservoir->setCapacity(stoi(MaxDelivery)); reservoir->setCapacityValue(stoi(MaxDelivery));
 
         nodeSet[Code] = reservoir;
         reservoirSet.push_back(reservoir);
-
-        n++;
     }
 
     std::sort(reservoirSet.begin(), reservoirSet.end(), [](Reservoir* a, Reservoir* b) {
@@ -140,22 +134,18 @@ bool Network::readReservoirs(const std::string &fileLocation) {
     });
 
     file.close();
-    return true;
 }
 
-bool Network::readPipes(const std::string &fileLocation) {
+void Network::readPipes(const std::string &fileLocation) {
 
     std::fstream file;
     file.open(fileLocation, ios::in);
-    if (!file.is_open()) {
-        std::cout << "ERROR - The function \"readPipes\" could not read the data" << std::endl;
-        return false;
-    }
+    if (!file.is_open())
+        throw runtime_error("ERROR - The function \"readPipes\" could not read the data");
 
     std::string line;
     getline(file, line); // Skip fist line
 
-    int n = 0;
     std::string SRC, DEST, Capacity, Direction;
 
     while (getline(file, line)) {
@@ -166,22 +156,22 @@ bool Network::readPipes(const std::string &fileLocation) {
         getline(ss, SRC, ',');
         getline(ss, DEST, ',');
         getline(ss, Capacity, ',');
-        getline(ss, Direction, '\r');
+        getline(ss, Direction);
+        filterString(Direction);
+
+        if (SRC.empty() || DEST.empty() || Capacity.empty() || Direction.empty()) continue;
 
         Node *src = findNode(SRC);
         Node *dest = findNode(DEST);
 
-        if (src == nullptr || dest == nullptr) return false;
+        if (src == nullptr || dest == nullptr) continue;
 
         src->addPipe(dest, stoi(Capacity));
 
-        if (Direction == "0") { dest->addPipe(src, 0); n++; }
-
-        n++;
+        if (Direction == "0") dest->addPipe(src, 0);
     }
 
     file.close();
-    return true;
 }
 
 void Network::readSuperElements()
