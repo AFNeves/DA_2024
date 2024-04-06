@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 #include "City.h"
 #include "Station.h"
@@ -35,12 +36,17 @@ bool Network::readStations(const std::string &fileLocation) {
 
         if (Code.empty()) continue;
 
-        nodeSet[Code] = new Station(stoi(ID), Code);
+        auto station = new Station(stoi(ID), Code);
+
+        nodeSet[Code] = station;
+        stationSet.push_back(station);
 
         n++;
     }
 
-    std::cout << "SUCCESS : readStations read " << n << " stations!" << std::endl;
+    std::sort(stationSet.begin(), stationSet.end(), [](Station* a, Station* b) {
+        return a->getID() < b->getID();
+    });
 
     file.close();
     return true;
@@ -79,11 +85,14 @@ bool Network::readCities(const std::string &fileLocation) {
         city->setCapacity(stoi(Demand)); city->setCapacityValue(stoi(Demand));
 
         nodeSet[Code] = city;
+        citySet.push_back(city);
 
         n++;
     }
 
-    std::cout << "SUCCESS : readCities read " << n << " cities!" << std::endl;
+    std::sort(citySet.begin(), citySet.end(), [](City* a, City* b) {
+        return a->getID() < b->getID();
+    });
 
     file.close();
     return true;
@@ -121,11 +130,14 @@ bool Network::readReservoirs(const std::string &fileLocation) {
         reservoir->setCapacity(stoi(MaxDelivery)); reservoir->setCapacityValue(stoi(MaxDelivery));
 
         nodeSet[Code] = reservoir;
+        reservoirSet.push_back(reservoir);
 
         n++;
     }
 
-    std::cout << "SUCCESS : readReservoirs read " << n << " reservoirs!" << std::endl;
+    std::sort(reservoirSet.begin(), reservoirSet.end(), [](Reservoir* a, Reservoir* b) {
+        return a->getID() < b->getID();
+    });
 
     file.close();
     return true;
@@ -168,28 +180,21 @@ bool Network::readPipes(const std::string &fileLocation) {
         n++;
     }
 
-    std::cout << "SUCCESS : readPipes read " << n << " pipes!" << std::endl;
-
     file.close();
     return true;
 }
 
-bool Network::readSuperElements()
+void Network::readSuperElements()
 {
-    auto src = new Node(0, "S_SRC");
-    auto sink = new Node(0, "S_SINK");
-
     for (const auto& pair : nodeSet)
     {
         if (pair.second->getCode().substr(0,1) == "R")
-            src->addPipe(pair.second, INT16_MAX);
+            superSrc->addPipe(pair.second, INT16_MAX);
 
         if (pair.second->getCode().substr(0,1) == "C")
-            pair.second->addPipe(sink, INT16_MAX);
+            pair.second->addPipe(superSink, INT16_MAX);
     }
 
-    nodeSet["S_SRC"] = src;
-    nodeSet["S_SINK"] = sink;
-
-    return true;
+    nodeSet["S_SRC"] = superSrc;
+    nodeSet["S_SINK"] = superSink;
 }

@@ -1,10 +1,15 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
+#include <vector>
 #include <string>
 #include <unordered_map>
 
 #include "Node.h"
+
+#include "City.h"
+#include "Station.h"
+#include "Reservoir.h"
 
 class Network {
 public:
@@ -16,14 +21,24 @@ public:
     ~Network();
 
     /* Getters */
+    Node *getSuperSrc() const;
+    Node *getSuperSink() const;
+    const std::vector<City *> &getCitySet() const;
+    const std::vector<Station *> &getStationSet() const;
+    const std::vector<Reservoir *> &getReservoirSet() const;
     const std::unordered_map<std::string, Node *> &getNodeSet() const;
 
     /* Setters */
+    void setSuperSrc(Node *superSrc);
+    void setSuperSink(Node *superSink);
+    void setCitySet(const std::vector<City *> &citySet);
+    void setStationSet(const std::vector<Station *> &stationSet);
+    void setReservoirSet(const std::vector<Reservoir *> &reservoirSet);
     void setNodeSet(std::unordered_map<std::string, Node *> &nodeSet);
 
     /* Functions */
+    void createNetwork(const std::string& dataPath, bool small);
     Node *findNode(const std::string& nodeCode);
-    bool addPipe(const std::string& src, const std::string& dest, int capacity);
     bool removePipe(const std::string& src, const std::string& dest);
     void resetNetwork();
 
@@ -32,7 +47,7 @@ public:
     bool readCities(const std::string &fileLocation);
     bool readReservoirs(const std::string &fileLocation);
     bool readPipes(const std::string &fileLocation);
-    bool readSuperElements();
+    void readSuperElements();
 
     /* Max-Flow */
     bool findAugmentingPath(Node *s, Node *t);
@@ -41,6 +56,13 @@ public:
     int edmondsKarp(Node *s, Node *t);
 
 private:
+
+    Node* superSrc;
+    Node* superSink;
+
+    std::vector<City*> citySet;
+    std::vector<Station*> stationSet;
+    std::vector<Reservoir*> reservoirSet;
 
     std::unordered_map<std::string, Node *> nodeSet;
 

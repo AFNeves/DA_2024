@@ -18,6 +18,7 @@ set(
         ${SRC_DIR}/Network.cpp
         ${SRC_DIR}/Parsing.cpp
         ${SRC_DIR}/MaxFlow.cpp
+        ${SRC_DIR}/Menu.cpp
 )
 
 add_executable(WaterSupplyManager ${SOURCE_FILES})

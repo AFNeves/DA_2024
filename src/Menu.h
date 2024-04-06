@@ -7,21 +7,33 @@ class Menu {
 public:
 
     Menu();
+
     void setUpMenu();
     void setUpCustom();
     void setUpPrinter(int flag);
+
     void mainMenu(bool isLoading);
     void mainMenuOptions(bool isLoading);
+
     void basicServiceMenu();
     void basicServiceMenuPrinter();
-    void basicMaxFlow();
+    void basicMaxFlowMenu();
+    void basicMaxFlowMenuPrinter();
+    void basicMaxFlowAll();
+    void basicMaxFlowSingle();
     void basicWaterDemand();
-    void basicMetrics();
+
+    /*
     void lineFailuresMenu();
     void lineFailuresMenuPrinter();
     void failuresRemoveStation();
     void failuresRemoveReservoirs();
     void failuresRemovePipes();
+    */
+
+    City* receiveCity();
+    //static bool confirmChoice();
+    static void pressEnterToReturn();
 
 private:
 

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "City.h"
+
 using namespace std;
 
 // -------------------- Constructor -------------------- //
@@ -27,16 +29,18 @@ void Menu::setUpMenu() {
 
     do {
         switch (input) {
-            case 0:
-                return;
             case 1:
-                dataPath = "../data/";
-                network.createNetwork(dataPath);
+                network.createNetwork(dataPath, true);
                 mainMenu(true);
                 return;
             case 2:
+                dataPath = "../data/large/";
+                network.createNetwork(dataPath, false);
+                mainMenu(true);
+                return;
+            case 3:
                 setUpCustom();
-                network.createNetwork(dataPath);
+                network.createNetwork(dataPath, false);
                 mainMenu(true);
                 return;
             default:
@@ -53,7 +57,7 @@ void Menu::setUpMenu() {
 void Menu::setUpCustom() {
     string input;
 
-    cout << endl << "   Please enter the data file's path: ";
+    cout << endl << "   Please enter the data set's path: ";
 
     getline(cin >> ws, input);
 
@@ -75,12 +79,13 @@ void Menu::setUpPrinter(int flag) {
     switch (flag) {
         case 0:
             cout << endl
-                 << "   Please select the data file's location:" << endl << endl
-                 << "     1. Data folder" << endl << endl
-                 << "     2. Custom path" << endl << endl
+                 << "   Please select the data set:" << endl << endl
+                 << "     1. Small Data Set" << endl << endl
+                 << "     2. Large Data Set" << endl << endl
+                 << "     3. Custom Data Set" << endl << endl
                  << "   Select your option: ";
             break;
-            /*
+        /*
         case 1:
             system("clear || cls");
             cout << endl
@@ -106,7 +111,7 @@ void Menu::setUpPrinter(int flag) {
                  << "     3. Pick connections to remove" << endl << endl
                  << "   Select your option: ";
             break;
-            */
+        */
         default:
             throw invalid_argument("Invalid option selected.");
     }
@@ -132,7 +137,7 @@ void Menu::mainMenu(bool isLoading) {
                 basicServiceMenu();
                 return;
             case 2:
-                lineFailuresMenu();
+                //lineFailuresMenu();
                 return;
             default:
                 cout << endl << "   Please select a valid option : ";
@@ -181,13 +186,10 @@ void Menu::basicServiceMenu() {
             case 0:
                 return;
             case 1:
-                basicMaxFlow();
+                basicMaxFlowMenu();
                 return;
             case 2:
                 basicWaterDemand();
-                return;
-            case 3:
-                basicMetrics();
                 return;
             case 9:
                 mainMenu(false);
@@ -209,42 +211,114 @@ void Menu::basicServiceMenuPrinter() {
          << "   Basic Service Metrics" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
-         << "     1. Max Flow" << endl << endl
-         << "     2. Water Demand" << endl << endl
-         << "     3. Metrics" << endl << endl << endl
-         << "     9. Return to Main Menu" << endl << endl
+         << "     1. Network Max Flow" << endl << endl
+         << "     2. Cities Water Demand" << endl << endl << endl
+         << "     9. Go back" << endl << endl
          << "     0. Exit application" << endl << endl
          << "   Select your option : ";
 }
 
-void Menu::basicMaxFlow() {
-    Node* source = receiveNode(true);
-    Node* destination = receiveNode(false);
-    unsigned int maxFlow = network.edmondsKarp(source, destination);
+void Menu::basicMaxFlowMenu() {
+    int input;
+
+    basicMaxFlowMenuPrinter();
+
+    while (!(cin >> input)) {
+        cout << endl << "   Please select a valid option : ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    do {
+        switch (input) {
+            case 0:
+                return;
+            case 1:
+                basicMaxFlowAll();
+                return;
+            case 2:
+                basicMaxFlowSingle();
+                return;
+            case 9:
+                basicServiceMenu();
+                return;
+            default:
+                cout << endl << "   Please select a valid option : ";
+                while (!(cin >> input)) {
+                    cout << endl << "   Please select a valid option : ";
+                    cin.clear(); cin.ignore(10000, '\n');
+                }
+        }
+    }
+    while(true);
+}
+
+void Menu::basicMaxFlowMenuPrinter() {
+    system("clear || cls");
+    cout << endl
+         << "   Max Flow" << endl
+         << "   ---------------------------------------------------------------------" << endl
+         << "   Please select your desired option by typing it on the selector intake" << endl << endl
+         << "     1. View all data" << endl << endl
+         << "     2. Select a specific city" << endl << endl << endl
+         << "     9. Go back" << endl << endl
+         << "     0. Exit application" << endl << endl
+         << "   Select your option : ";
+}
+
+void Menu::basicMaxFlowAll() {
+    int maxFlow = network.edmondsKarp(network.getSuperSrc(), network.getSuperSink());
 
     system("clear || cls");
     cout << endl
-         << "   | MAX FLOW |" << endl << endl;
+         << "   | NETWORK MAX FLOW |" << endl << endl;
 
-    if (isStationOutputSafe(source))
-        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
-             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
-    else
-        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+    for (City* city : network.getCitySet())
+        cout << "   " << city->getCode() << " | " << city->getName() << " -> " << city->getCapacityValue() - city->getCapacity() << endl << endl;
 
-    if (isStationOutputSafe(destination))
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
-             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
-    else
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
+    cout << "   TOTAL NETWORK FLOW: " << maxFlow << endl << endl;
 
-    cout << "   The maximum number of trains that can simultaneously travel between this two specific stations is of " << maxFlow << "." << endl;
+    pressEnterToReturn();
+    basicMaxFlowMenu();
+}
+
+void Menu::basicMaxFlowSingle() {
+    network.edmondsKarp(network.getSuperSrc(), network.getSuperSink());
+
+    City* city = receiveCity();
+
+    cout << endl
+         << "   ! FOUND !" << endl << endl
+         << "   " << city->getCode() << " | " << city->getName() << " -> " << city->getCapacityValue() - city->getCapacity() << endl << endl;
+
+    pressEnterToReturn();
+    basicMaxFlowMenu();
+}
+
+void Menu::basicWaterDemand() {
+    network.edmondsKarp(network.getSuperSrc(), network.getSuperSink());
+
+    system("clear || cls");
+    cout << endl
+         << "   | NETWORK WATER DEMAND |" << endl << endl;
+
+    for (City* city : network.getCitySet())
+    {
+        if (city->getCapacity() != 0)
+        {
+            cout << "   " << city->getCode() << " | " << city->getName() << endl
+                 << "     Demand: " << int(city->getDemand()) << endl
+                 << "     Actual Flow: " << city->getCapacityValue() - city->getCapacity() << endl
+                 << "     Deficit: " << city->getCapacity() << endl << endl;
+        }
+    }
 
     pressEnterToReturn();
     basicServiceMenu();
 }
 
 // ------------------- Line Failures ------------------- //
+
+/*
 
 void Menu::lineFailuresMenu() {
     int input;
@@ -324,46 +398,37 @@ void Menu::failuresRemoveReservoir() {
     lineFailuresMenu();
 }
 
-// ----------------- Auxiliar Functions ---------------- //
+*/
 
-Node* Menu::receiveStation(bool type) {
+// ----------------- Auxiliary Functions ---------------- //
+
+City* Menu::receiveCity() {
     string input;
-    Node* stationptr;
+    Node* nodeptr;
 
     system("clear || cls");
-
-    if (type)
-        cout << endl << "   -> SOURCE <-" << endl
-             << endl << "   Please enter a valid station name : ";
-    else
-        cout << endl << "   -> DESTINATION <-" << endl
-             << endl << "   Please enter a valid station name : ";
+    cout << endl << "   Please enter a valid city code : ";
 
     getline(cin >> ws, input);
 
     do {
-        if (network.doesNodeExist(input, stationptr)) {
-            if (isStationOutputSafe(stationptr))
-                cout << endl << "   ! FOUND !" << endl
-                     << endl << "   You've selected the " << stationptr->getName() << " station located in "
-                     << stationptr->getMunicipality() << ", " << stationptr->getDistrict() << "." << endl;
-            else
-                cout << endl << "   ! FOUND !" << endl
-                     << endl << "   You've selected the " << stationptr->getName() << " station." << endl;
-            if (confirmChoice()) return stationptr;
-        }
+        nodeptr = network.findNode(input);
+        if (nodeptr != nullptr)
+            return dynamic_cast<City *>(nodeptr);
         cout << endl << "   Please enter a valid station name : ";
         getline(cin >> ws, input);
     }
     while(true);
 }
 
+/*
+
 bool Menu::confirmChoice() {
     int input;
 
     cout << endl
-         << "     1. Confirm choice and proceed" << endl << endl
-         << "     2. Go back and make changes" << endl << endl
+         << "     1. Confirm" << endl << endl
+         << "     2. Go back" << endl << endl
          << "   Select your option : ";
 
     while (!(cin >> input)) {
@@ -388,20 +453,13 @@ bool Menu::confirmChoice() {
     while(true);
 }
 
+*/
+
 void Menu::pressEnterToReturn() {
     cout << endl << "   Press ENTER to return...";
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
-
-void Menu::pressEnterToContinue() {
-    cout << endl << "   Press ENTER to continue...";
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
-}
-
-bool Menu::isStationOutputSafe(Station* stationptr) {}
 
 // -------------------- END OF FILE -------------------- //
