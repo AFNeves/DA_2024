@@ -39,7 +39,6 @@ public:
     /* Functions */
     void createNetwork(const std::string& dataPath, bool small);
     Node *findNode(const std::string& nodeCode);
-    bool removePipe(const std::string& src, const std::string& dest);
     void resetNetwork();
 
     /* Parsing */

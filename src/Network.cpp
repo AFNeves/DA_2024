@@ -72,19 +72,6 @@ Node *Network::findNode(const std::string& nodeCode)
     return nullptr;
 }
 
-bool Network::removePipe(const std::string& src, const std::string& dest)
-{
-    Node *srcNode = findNode(src);
-    Node *destNode = findNode(dest);
-
-    if (srcNode != nullptr && destNode != nullptr)
-    {
-        if ((*srcNode).removePipeTo(destNode)) return true;
-    }
-
-    return false;
-}
-
 void Network::resetNetwork()
 {
     for (const auto& pair : nodeSet)

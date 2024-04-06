@@ -55,23 +55,17 @@ void Node::addPipe(Node *dest, int cap)
     adj.push_back(new Pipe(this, dest, cap));
 }
 
-bool Node::removePipeTo(Node *dest)
+void Node::removePipe(Node *dest)
 {
     for (auto it = adj.begin(); it != adj.end(); it++)
         if ((*it)->dest == dest)
-        {
             adj.erase(it);
-            return true;
-        }
-    return false;
 }
 
 Pipe* Node::getPipeTo(Node *dest)
 {
     for (auto pipe : adj)
-    {
         if (pipe->dest == dest) return pipe;
-    }
     return nullptr;
 }
 

@@ -41,7 +41,7 @@ public:
 
     /* Functions */
     void addPipe(Node *dest, int capacity);
-    bool removePipeTo(Node *dest);
+    void removePipe(Node *dest);
     Pipe* getPipeTo(Node *dest);
     void resetNode();
 
