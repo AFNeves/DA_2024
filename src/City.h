@@ -3,6 +3,9 @@
 
 #include "Node.h"
 
+/**
+ * @brief Class representing a city in the water supply network.
+ */
 class City : public Node {
 public:
 

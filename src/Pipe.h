@@ -3,6 +3,9 @@
 
 class Node;
 
+/**
+ * @brief Class representing a pipe connecting two nodes in the water supply network graph.
+ */
 class Pipe {
 public:
 	friend class Node;
@@ -26,6 +29,9 @@ public:
     void setResidual(int newResidual);
 
     /* Functions */
+    /**
+     * @brief Reset the pipe to its initial state.
+     */
     void resetPipe();
 
 private:

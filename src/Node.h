@@ -6,6 +6,9 @@
 
 class Pipe;
 
+/**
+ * @brief Class representing a node in the water supply network graph.
+ */
 class Node {
 public:
     friend class Pipe;
@@ -40,9 +43,26 @@ public:
     bool operator!=(const Node &rhs) const;
 
     /* Functions */
+    /**
+     * @brief Add a pipe to the node.
+     * @param dest The destination node of the pipe.
+     * @param cap The capacity of the pipe.
+     */
     void addPipe(Node *dest, int capacity);
+    /**
+     * @brief Remove a pipe connected to the node.
+     * @param dest The destination node of the pipe to be removed.
+     */
     void removePipe(Node *dest);
+    /**
+     * @brief Get the pipe connected to the given destination node.
+     * @param dest The destination node of the pipe.
+     * @return A pointer to the pipe if found, nullptr otherwise.
+     */
     Pipe* getPipeTo(Node *dest);
+    /**
+     * @brief Reset the node to its initial state.
+     */
     void resetNode();
 
 private:

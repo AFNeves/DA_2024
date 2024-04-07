@@ -3,6 +3,9 @@
 
 #include "Node.h"
 
+/**
+ * @brief Class representing a reservoir in the water supply network.
+ */
 class Reservoir : public Node {
 public:
 
