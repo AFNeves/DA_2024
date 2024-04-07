@@ -53,8 +53,8 @@ public:
 
     /* Max-Flow */
     bool findAugmentingPath(Node *s, Node *t);
-    int findMinResidualAlongPath(Node *s, Node *t);
-    void augmentFlowAlongPath(Node *s, Node *t, int f);
+    static int findMinResidualAlongPath(Node *s, Node *t);
+    static void augmentFlowAlongPath(Node *s, Node *t, int f);
     int edmondsKarp();
 
 private:
