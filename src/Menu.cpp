@@ -138,7 +138,7 @@ void Menu::mainMenu(bool isLoading) {
                 basicServiceMenu();
                 return;
             case 2:
-                //lineFailuresMenu();
+                lineFailuresMenu();
                 return;
             case 9:
                 if (confirmChoice()) setUpMenu();
@@ -290,7 +290,10 @@ void Menu::basicMaxFlowAll() {
 void Menu::basicMaxFlowSingle() {
     network.edmondsKarp(network.getSuperSrc(), network.getSuperSink());
 
-    City* city = receiveCity();
+    system("clear || cls");
+    cout << endl << "   Please enter a valid city code : ";
+
+    City* city = receiveNode<City>();
 
     cout << endl
          << "   ! FOUND !" << endl << endl
@@ -324,8 +327,6 @@ void Menu::basicWaterDemand() {
 
 // ------------------- Line Failures ------------------- //
 
-/*
-
 void Menu::lineFailuresMenu() {
     int input;
 
@@ -347,7 +348,7 @@ void Menu::lineFailuresMenu() {
                 failuresRemoveStation();
                 return;
             case 3:
-                failuresRemovePipes();
+                failuresRemovePipe();
             case 9:
                 mainMenu(false);
                 return;
@@ -368,9 +369,9 @@ void Menu::lineFailuresMenuPrinter() {
          << "   Reliability and Sensitivity to Line Failures" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
-         << "     1. Remove Reservoirs" << endl << endl
-         << "     2. Remove Stations" << endl << endl
-         << "     3. Remove Pipes" << endl << endl << endl
+         << "     1. Remove a Reservoir" << endl << endl
+         << "     2. Remove a Station" << endl << endl
+         << "     3. Remove a Pipe" << endl << endl << endl
          << "     9. Return to Main Menu" << endl << endl
          << "     0. Exit application" << endl << endl
          << "   Select your option : ";
@@ -404,23 +405,75 @@ void Menu::failuresRemoveReservoir() {
     lineFailuresMenu();
 }
 
-*/
+void Menu::failuresRemoveStation() {
+    Node* source = receiveNode(true);
+    Node* destination = receiveNode(false);
+    unsigned int maxFlow = subNetwork.edmondsKarp(source, destination);
+
+    system("clear || cls");
+    cout << endl
+         << "   | MAX NUMBER OF TRAINS IN A SEGMENT - REDUCED CONNECTIVITY |" << endl << endl;
+
+    if (isStationOutputSafe(source))
+        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
+             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
+    else
+        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+
+    if (isStationOutputSafe(destination))
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
+             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
+    else
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
+
+    cout << endl << "   Considering the segment failures, the maximum number of trains that can" << endl
+         << endl << "          simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+
+    pressEnterToReturn();
+    lineFailuresMenu();
+}
+
+void Menu::failuresRemovePipe() {
+    Node* source = receiveNode(true);
+    Node* destination = receiveNode(false);
+    unsigned int maxFlow = subNetwork.edmondsKarp(source, destination);
+
+    system("clear || cls");
+    cout << endl
+         << "   | MAX NUMBER OF TRAINS IN A SEGMENT - REDUCED CONNECTIVITY |" << endl << endl;
+
+    if (isStationOutputSafe(source))
+        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
+             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
+    else
+        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+
+    if (isStationOutputSafe(destination))
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
+             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
+    else
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
+
+    cout << endl << "   Considering the segment failures, the maximum number of trains that can" << endl
+         << endl << "          simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+
+    pressEnterToReturn();
+    lineFailuresMenu();
+}
 
 // ----------------- Auxiliary Functions ---------------- //
 
-City* Menu::receiveCity() {
+template<typename NodeType>
+NodeType* Menu::receiveNode() {
     string input;
     Node* nodeptr;
-
-    system("clear || cls");
-    cout << endl << "   Please enter a valid city code : ";
 
     getline(cin >> ws, input);
 
     do {
         nodeptr = network.findNode(input);
         if (nodeptr != nullptr)
-            return dynamic_cast<City *>(nodeptr);
+            return dynamic_cast<NodeType *>(nodeptr);
         cout << endl << "   Please enter a valid station name : ";
         getline(cin >> ws, input);
     }

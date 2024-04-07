@@ -23,15 +23,14 @@ public:
     void basicMaxFlowSingle();
     void basicWaterDemand();
 
-    /*
     void lineFailuresMenu();
     void lineFailuresMenuPrinter();
     void failuresRemoveStation();
-    void failuresRemoveReservoirs();
-    void failuresRemovePipes();
-    */
+    void failuresRemoveReservoir();
+    void failuresRemovePipe();
 
-    City* receiveCity();
+    template<typename NodeType>
+    NodeType* receiveNode();
     static bool confirmChoice();
     static void pressEnterToReturn();
 
