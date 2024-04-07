@@ -21,7 +21,13 @@ Menu::Menu() {
 void Menu::setUpMenu() {
     int input;
 
-    setUpPrinter(0);
+    system("clear || cls");
+    cout << endl
+         << "   Please select the data set:" << endl << endl
+         << "     1. Small Data Set" << endl << endl
+         << "     2. Large Data Set" << endl << endl
+         << "     3. Custom Data Set" << endl << endl
+         << "   Select your option: ";
 
     while (!(cin >> input)) {
         cout << endl << "   Please select a valid option: ";
@@ -77,49 +83,6 @@ void Menu::setUpCustom() {
         getline(cin >> ws, input);
     }
     while(true);
-}
-
-void Menu::setUpPrinter(int flag) {
-    system("clear || cls");
-    switch (flag) {
-        case 0:
-            cout << endl
-                 << "   Please select the data set:" << endl << endl
-                 << "     1. Small Data Set" << endl << endl
-                 << "     2. Large Data Set" << endl << endl
-                 << "     3. Custom Data Set" << endl << endl
-                 << "   Select your option: ";
-            break;
-        /*
-        case 1:
-            system("clear || cls");
-            cout << endl
-                 << "   Please select the desired train prices:" << endl << endl
-                 << "     1. Default prices" << endl << endl
-                 << "     2. Custom prices" << endl << endl
-                 << "   Select your option: ";
-            break;
-        case 2:
-            system("clear || cls");
-            cout << endl << "   -> Train Prices <-" << endl
-                 << endl << "   STANDARD service : ";
-            break;
-        case 3:
-            cout << endl << "   ALFA PENDULAR service : ";
-            break;
-        case 4:
-            system("clear || cls");
-            cout << endl
-                 << "   Please select how you want to create the new sub railway:" << endl << endl
-                 << "     1. Use the full railway" << endl << endl
-                 << "     2. Random generate using a seed" << endl << endl
-                 << "     3. Pick connections to remove" << endl << endl
-                 << "   Select your option: ";
-            break;
-        */
-        default:
-            throw invalid_argument("Invalid option selected.");
-    }
 }
 
 // --------------------- Main Menu --------------------- //
