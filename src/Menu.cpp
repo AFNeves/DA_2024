@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "City.h"
+#include "Pipe.h"
 
 using namespace std;
 
@@ -386,23 +387,29 @@ void Menu::failuresRemoveReservoir() {
 
     auto* reservoir = receiveNode<Reservoir>("R", false);
 
-    subNetwork.removeReservoir(reservoir);
-    network.edmondsKarp(); subNetwork.edmondsKarp();
-
     cout << endl
          << "   " << reservoir->getCode() << " " << reservoir->getName() << " has been removed from the network." << endl << endl
          << "   | CITIES AFFECTED |" << endl << endl;
 
-    for (int i = 0; i < network.getCitySet().size(); i++)
-    {
+    subNetwork.removeReservoir(reservoir);
+    network.edmondsKarp(); subNetwork.edmondsKarp();
+
+    int n = 0;
+
+    for (int i = 0; i < network.getCitySet().size(); i++) {
         City *city1 = network.getCitySet()[i];
         City *city2 = subNetwork.getCitySet()[i];
-        if (city1->getCapacity() != city2->getCapacity())
+        if (city1->getCapacity() != city2->getCapacity()) {
             cout << "   " << city1->getCode() << " | " << city1->getName() << endl
                  << "     Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
                  << "     New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
-                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) - (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
+                                        (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+            n++;
+        }
     }
+
+    if (n == 0) cout << "   No city has been affected." << endl << endl;
 
     subNetwork.deleteNetwork();
     subNetwork.createNetwork(dataPath);
@@ -417,23 +424,29 @@ void Menu::failuresRemoveStation() {
 
     auto* station = receiveNode<Station>("P", false);
 
-    subNetwork.removeStation(station);
-    network.edmondsKarp(); subNetwork.edmondsKarp();
-
     cout << endl
          << "   " << station->getCode() << " has been removed from the network." << endl << endl
          << "   | CITIES AFFECTED |" << endl << endl;
 
-    for (int i = 0; i < network.getCitySet().size(); i++)
-    {
+    subNetwork.removeStation(station);
+    network.edmondsKarp(); subNetwork.edmondsKarp();
+
+    int n = 0;
+
+    for (int i = 0; i < network.getCitySet().size(); i++) {
         City *city1 = network.getCitySet()[i];
         City *city2 = subNetwork.getCitySet()[i];
-        if (city1->getCapacity() != city2->getCapacity())
+        if (city1->getCapacity() != city2->getCapacity()) {
             cout << "   " << city1->getCode() << " | " << city1->getName() << endl
                  << "     Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
                  << "     New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
-                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) - (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
+                                        (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+            n++;
+        }
     }
+
+    if (n == 0) cout << "   No city has been affected." << endl << endl;
 
     subNetwork.deleteNetwork();
     subNetwork.createNetwork(dataPath);
@@ -444,27 +457,44 @@ void Menu::failuresRemoveStation() {
 
 void Menu::failuresRemovePipe() {
     system("clear || cls");
-    cout << endl << "   Please enter a valid station code : ";
+    cout << endl << "   | SOURCE |" << endl
+         << endl << "   Please enter a valid station code : ";
 
-    auto* station = receiveNode<Station>("P", false);
+    auto* src = receiveNode<Node>("", false);
 
-    subNetwork.removeStation(station);
+    cout << endl << "   | TARGET |" << endl
+         << endl << "   Please enter a valid station code : ";
+
+    auto* dest = receiveNode<Node>("", false);
+
+    Pipe* pipeSD = src->getPipeTo(dest);
+    if (pipeSD != nullptr) pipeSD->setCapacity(0);
+    Pipe* pipeDS = dest->getPipeTo(src);
+    if (pipeDS != nullptr) pipeDS->setCapacity(0);
+
     network.edmondsKarp(); subNetwork.edmondsKarp();
 
     cout << endl
-         << "   " << station->getCode() << " has been removed from the network." << endl << endl
+         << "   " << src->getCode() << " -> " << dest->getCode() << " has been removed from the network." << endl << endl
          << "   | CITIES AFFECTED |" << endl << endl;
+
+    int n = 0;
 
     for (int i = 0; i < network.getCitySet().size(); i++)
     {
         City *city1 = network.getCitySet()[i];
         City *city2 = subNetwork.getCitySet()[i];
-        if (city1->getCapacity() != city2->getCapacity())
+        if (city1->getCapacity() != city2->getCapacity()) {
             cout << "   " << city1->getCode() << " | " << city1->getName() << endl
                  << "     Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
                  << "     New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
-                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) - (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
+                                        (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+            n++;
+        }
     }
+
+    if (n == 0) cout << "   No city has been affected." << endl << endl;
 
     subNetwork.deleteNetwork();
     subNetwork.createNetwork(dataPath);
@@ -485,7 +515,7 @@ NodeType* Menu::receiveNode(const string& type, bool networkID) {
     do {
         if (networkID) nodeptr = network.findNode(input);
         else nodeptr = subNetwork.findNode(input);
-        if (nodeptr != nullptr && nodeptr->getCode().substr(0,1) == type)
+        if (nodeptr != nullptr && (type.empty() || nodeptr->getCode().substr(0,1) == type))
             return dynamic_cast<NodeType *>(nodeptr);
         cout << endl << "   Please enter a valid code : ";
         getline(cin >> ws, input);
