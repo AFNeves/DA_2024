@@ -145,7 +145,7 @@ void Menu::mainMenu(bool isLoading) {
                 lineFailuresMenu();
                 return;
             case 9:
-                if (confirmChoice()) setUpMenu();
+                if (confirmChoice(true)) setUpMenu();
                 else mainMenu(false);
                 return;
             default:
@@ -287,7 +287,28 @@ void Menu::basicMaxFlowAll() {
 
     cout << "   TOTAL NETWORK FLOW: " << maxFlow << endl << endl;
 
-    pressEnterToReturn();
+    if (confirmChoice(1))
+    {
+        string filename = getFilename();
+        filename = "../output/" + filename + ".txt";
+
+        ofstream outFile(filename);
+        if(!outFile.is_open()) outFile.open(filename);
+
+        outFile << "| NETWORK MAX FLOW |" << endl << endl;
+
+        for (City* city : network.getCitySet())
+            outFile << "" << city->getCode() << " | " << city->getName() << " -> " << city->getCapacityValue() - city->getCapacity() << endl << endl;
+
+        outFile << "TOTAL NETWORK FLOW: " << maxFlow << endl;
+
+        outFile.close();
+
+        pressEnterToReturn();
+        basicMaxFlowMenu();
+        return;
+    }
+
     basicMaxFlowMenu();
 }
 
@@ -325,7 +346,34 @@ void Menu::basicWaterDemand() {
         }
     }
 
-    pressEnterToReturn();
+    if (confirmChoice(1))
+    {
+        string filename = getFilename();
+        filename = "../output/" + filename + ".txt";
+
+        ofstream outFile(filename);
+        if(!outFile.is_open()) outFile.open(filename);
+
+        outFile << "| NETWORK WATER DEMAND |" << endl << endl;
+
+        for (City* city : network.getCitySet())
+        {
+            if (city->getCapacity() != 0)
+            {
+                outFile << "" << city->getCode() << " | " << city->getName() << endl
+                        << "  Demand: " << int(city->getDemand()) << endl
+                        << "  Actual Flow: " << city->getCapacityValue() - city->getCapacity() << endl
+                        << "  Deficit: " << city->getCapacity() << endl;
+            }
+        }
+
+        outFile.close();
+
+        pressEnterToReturn();
+        basicMaxFlowMenu();
+        return;
+    }
+
     basicServiceMenu();
 }
 
@@ -391,6 +439,8 @@ void Menu::failuresRemoveReservoir() {
          << "   " << reservoir->getCode() << " " << reservoir->getName() << " has been removed from the network." << endl << endl
          << "   | CITIES AFFECTED |" << endl << endl;
 
+    string r_code = reservoir->getCode(), r_name = reservoir->getName();
+
     subNetwork.removeReservoir(reservoir);
     network.edmondsKarp(); subNetwork.edmondsKarp();
 
@@ -411,10 +461,46 @@ void Menu::failuresRemoveReservoir() {
 
     if (n == 0) cout << "   No city has been affected." << endl << endl;
 
+    if (confirmChoice(1))
+    {
+        string filename = getFilename();
+        filename = "../output/" + filename + ".txt";
+
+        ofstream outFile(filename);
+        if(!outFile.is_open()) outFile.open(filename);
+
+        outFile << "| CITIES AFFECTED |" << endl << endl;
+
+        for (int i = 0; i < network.getCitySet().size(); i++) {
+            City *city1 = network.getCitySet()[i];
+            City *city2 = subNetwork.getCitySet()[i];
+            if (city1->getCapacity() != city2->getCapacity()) {
+                outFile << "" << city1->getCode() << " | " << city1->getName() << endl
+                        << "  Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
+                        << "  New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
+                        << "  Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
+                                            (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+                n++;
+            }
+        }
+
+        if (n == 0) outFile << "No city has been affected." << endl;
+
+        outFile << r_code << " " << r_name << " was removed from the network." << endl;
+
+        outFile.close();
+
+        subNetwork.deleteNetwork();
+        subNetwork.createNetwork(dataPath);
+
+        pressEnterToReturn();
+        lineFailuresMenu();
+        return;
+    }
+
     subNetwork.deleteNetwork();
     subNetwork.createNetwork(dataPath);
 
-    pressEnterToReturn();
     lineFailuresMenu();
 }
 
@@ -427,6 +513,8 @@ void Menu::failuresRemoveStation() {
     cout << endl
          << "   " << station->getCode() << " has been removed from the network." << endl << endl
          << "   | CITIES AFFECTED |" << endl << endl;
+
+    string s_code = station->getCode();
 
     subNetwork.removeStation(station);
     network.edmondsKarp(); subNetwork.edmondsKarp();
@@ -448,10 +536,46 @@ void Menu::failuresRemoveStation() {
 
     if (n == 0) cout << "   No city has been affected." << endl << endl;
 
+    if (confirmChoice(1))
+    {
+        string filename = getFilename();
+        filename = "../output/" + filename + ".txt";
+
+        ofstream outFile(filename);
+        if(!outFile.is_open()) outFile.open(filename);
+
+        outFile << "| CITIES AFFECTED |" << endl << endl;
+
+        for (int i = 0; i < network.getCitySet().size(); i++) {
+            City *city1 = network.getCitySet()[i];
+            City *city2 = subNetwork.getCitySet()[i];
+            if (city1->getCapacity() != city2->getCapacity()) {
+                outFile << "" << city1->getCode() << " | " << city1->getName() << endl
+                        << "  Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
+                        << "  New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
+                        << "  Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
+                                            (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+                n++;
+            }
+        }
+
+        if (n == 0) outFile << "No city has been affected." << endl;
+
+        outFile << s_code << " has been removed from the network." << endl;
+
+        outFile.close();
+
+        subNetwork.deleteNetwork();
+        subNetwork.createNetwork(dataPath);
+
+        pressEnterToReturn();
+        lineFailuresMenu();
+        return;
+    }
+
     subNetwork.deleteNetwork();
     subNetwork.createNetwork(dataPath);
 
-    pressEnterToReturn();
     lineFailuresMenu();
 }
 
@@ -496,10 +620,47 @@ void Menu::failuresRemovePipe() {
 
     if (n == 0) cout << "   No city has been affected." << endl << endl;
 
+    if (confirmChoice(1))
+    {
+        string filename = getFilename();
+        filename = "../output/" + filename + ".txt";
+
+        ofstream outFile(filename);
+        if(!outFile.is_open()) outFile.open(filename);
+
+        outFile << "| CITIES AFFECTED |" << endl << endl;
+
+        for (int i = 0; i < network.getCitySet().size(); i++)
+        {
+            City *city1 = network.getCitySet()[i];
+            City *city2 = subNetwork.getCitySet()[i];
+            if (city1->getCapacity() != city2->getCapacity()) {
+                outFile << city1->getCode() << " | " << city1->getName() << endl
+                        << "  Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
+                        << "  New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
+                        << "  Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) -
+                                            (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+                n++;
+            }
+        }
+
+        if (n == 0) outFile << "   No city has been affected." << endl << endl;
+
+        outFile << src->getCode() << " -> " << dest->getCode() << " has been removed from the network." << endl;
+
+        outFile.close();
+
+        subNetwork.deleteNetwork();
+        subNetwork.createNetwork(dataPath);
+
+        pressEnterToReturn();
+        lineFailuresMenu();
+        return;
+    }
+
     subNetwork.deleteNetwork();
     subNetwork.createNetwork(dataPath);
 
-    pressEnterToReturn();
     lineFailuresMenu();
 }
 
@@ -523,16 +684,35 @@ NodeType* Menu::receiveNode(const string& type, bool networkID) {
     while(true);
 }
 
-bool Menu::confirmChoice() {
+bool Menu::confirmChoice(int flag) {
     int input;
 
-    cout << endl
-         << "   -------------------------" << endl << endl
-         << "   ! WARNING !" << endl << endl
-         << "   You're about to change the data set!" << endl << endl
-         << "     1. Confirm" << endl << endl
-         << "     2. Go back" << endl << endl
-         << "   Select your option : ";
+    switch (flag) {
+        case 0:
+            cout << endl
+                 << "   -------------------------" << endl << endl
+                 << "   ! WARNING !" << endl << endl
+                 << "   You're about to change the data set!" << endl << endl
+                 << "     1. Confirm" << endl << endl
+                 << "     2. Go back" << endl << endl
+                 << "   Select your option : ";
+            break;
+        case 1:
+            cout << "   -------------------------" << endl << endl
+                 << "   Do you wish to save the results?" << endl << endl
+                 << "     1. Save results to file" << endl << endl
+                 << "     2. Go back" << endl << endl
+                 << "   Select your option : ";
+            break;
+        case 2:
+            cout << endl
+                 << "     1. Advance" << endl << endl
+                 << "     2. Retype" << endl << endl
+                 << "   Select your option : ";
+            break;
+        default:
+            throw invalid_argument("Invalid option selected.");
+    }
 
     while (!(cin >> input)) {
         cout << endl << "   Please select a valid option : ";
@@ -561,6 +741,26 @@ void Menu::pressEnterToReturn() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
+}
+
+string Menu::getFilename() {
+    string input;
+
+    cout << endl << "   Please enter the desired file name with no file extension: ";
+
+    getline(cin >> ws, input);
+
+    do {
+        ifstream testNetwork("../output/" + input + ".txt");
+        if (!testNetwork.good()) {
+            cout << endl << "   The results will be saved under ./output/" + input + ".txt" << endl;
+            if (confirmChoice(2)) return input;
+        }
+        else cout << endl << "   This file already exists!" << endl; system("sleep 0.5");
+        cout << endl << "   Please enter the desired file name with no file extension: ";
+        getline(cin >> ws, input);
+    }
+    while(true);
 }
 
 // -------------------- END OF FILE -------------------- //

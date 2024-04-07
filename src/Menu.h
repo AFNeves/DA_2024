@@ -31,8 +31,9 @@ public:
 
     template<typename NodeType>
     NodeType* receiveNode(const std::string& type, bool network);
-    static bool confirmChoice();
+    static bool confirmChoice(int flag);
     static void pressEnterToReturn();
+    static std::string getFilename();
 
 private:
 

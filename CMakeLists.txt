@@ -21,4 +21,6 @@ set(
         ${SRC_DIR}/Menu.cpp
 )
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/output)
+
 add_executable(WaterSupplyManager ${SOURCE_FILES})
