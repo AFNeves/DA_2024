@@ -2,24 +2,32 @@
 
 /* Constructor */
 
-Pipe::Pipe(Node *a, Node *b, int capacity, bool biDirection) : A(a), B(b), capacity(capacity), biDirection(biDirection) {}
+Pipe::Pipe(Node *src, Node *dest, int capacity) : src(src), dest(dest), capacity(capacity), flow(0), residual(capacity) {}
 
 /* Getters */
 
-Node *Pipe::getA() const { return A; }
+Node *Pipe::getSrc() const { return src; }
 
-Node *Pipe::getB() const { return B; }
+Node *Pipe::getDest() const { return dest; }
+
+int Pipe::getFlow() const { return flow; }
 
 int Pipe::getCapacity() const { return capacity; }
 
-bool Pipe::isBiDirectional() const { return biDirection; }
+int Pipe::getResidual() const { return residual; }
 
 /* Setters */
 
-void Pipe::setA(Node *newNode) { A = newNode; }
+void Pipe::setSrc(Node *newNode) { src = newNode; }
 
-void Pipe::setB(Node *newNode) { B = newNode; }
+void Pipe::setDest(Node *newNode) { dest = newNode; }
 
-void Pipe::setCapacity(int newCapacity) { Pipe::capacity = newCapacity; }
+void Pipe::setFlow(int newFlow) { flow = newFlow; }
 
-void Pipe::setBiDirection(bool newDirection) { Pipe::biDirection = newDirection; }
+void Pipe::setCapacity(int newCapacity) { capacity = newCapacity; }
+
+void Pipe::setResidual(int newResidual) { residual = newResidual; }
+
+/* Functions */
+
+void Pipe::resetPipe() { flow = 0; residual = capacity; }

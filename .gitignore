@@ -3,6 +3,7 @@
 build/
 .vscode/
 cmake-build-debug/
+output/
 
 # File Extensions
 *.o
