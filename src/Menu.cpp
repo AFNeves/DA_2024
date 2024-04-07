@@ -30,17 +30,20 @@ void Menu::setUpMenu() {
     do {
         switch (input) {
             case 1:
-                network.createNetwork(dataPath, true);
+                network.createNetwork(dataPath);
+                subNetwork.createNetwork(dataPath);
                 mainMenu(true);
                 return;
             case 2:
                 dataPath = "../data/large/";
-                network.createNetwork(dataPath, false);
+                network.createNetwork(dataPath);
+                subNetwork.createNetwork(dataPath);
                 mainMenu(true);
                 return;
             case 3:
                 setUpCustom();
-                network.createNetwork(dataPath, false);
+                network.createNetwork(dataPath);
+                subNetwork.createNetwork(dataPath);
                 mainMenu(true);
                 return;
             default:
@@ -272,7 +275,7 @@ void Menu::basicMaxFlowMenuPrinter() {
 }
 
 void Menu::basicMaxFlowAll() {
-    int maxFlow = network.edmondsKarp(network.getSuperSrc(), network.getSuperSink());
+    int maxFlow = network.edmondsKarp();
 
     system("clear || cls");
     cout << endl
@@ -288,12 +291,12 @@ void Menu::basicMaxFlowAll() {
 }
 
 void Menu::basicMaxFlowSingle() {
-    network.edmondsKarp(network.getSuperSrc(), network.getSuperSink());
+    network.edmondsKarp();
 
     system("clear || cls");
     cout << endl << "   Please enter a valid city code : ";
 
-    City* city = receiveNode<City>();
+    City* city = receiveNode<City>("C", true);
 
     cout << endl
          << "   ! FOUND !" << endl << endl
@@ -304,7 +307,7 @@ void Menu::basicMaxFlowSingle() {
 }
 
 void Menu::basicWaterDemand() {
-    network.edmondsKarp(network.getSuperSrc(), network.getSuperSink());
+    network.edmondsKarp();
 
     system("clear || cls");
     cout << endl
@@ -378,84 +381,93 @@ void Menu::lineFailuresMenuPrinter() {
 }
 
 void Menu::failuresRemoveReservoir() {
-    Node* source = receiveNode(true);
-    Node* destination = receiveNode(false);
-    unsigned int maxFlow = subNetwork.edmondsKarp(source, destination);
-
     system("clear || cls");
+    cout << endl << "   Please enter a valid reservoir code : ";
+
+    auto* reservoir = receiveNode<Reservoir>("R", false);
+
+    subNetwork.removeReservoir(reservoir);
+    network.edmondsKarp(); subNetwork.edmondsKarp();
+
     cout << endl
-         << "   | MAX NUMBER OF TRAINS IN A SEGMENT - REDUCED CONNECTIVITY |" << endl << endl;
+         << "   " << reservoir->getCode() << " " << reservoir->getName() << " has been removed from the network." << endl << endl
+         << "   | CITIES AFFECTED |" << endl << endl;
 
-    if (isStationOutputSafe(source))
-        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
-             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
-    else
-        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+    for (int i = 0; i < network.getCitySet().size(); i++)
+    {
+        City *city1 = network.getCitySet()[i];
+        City *city2 = subNetwork.getCitySet()[i];
+        if (city1->getCapacity() != city2->getCapacity())
+            cout << "   " << city1->getCode() << " | " << city1->getName() << endl
+                 << "     Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
+                 << "     New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
+                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) - (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+    }
 
-    if (isStationOutputSafe(destination))
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
-             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
-    else
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
-
-    cout << endl << "   Considering the segment failures, the maximum number of trains that can" << endl
-         << endl << "          simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+    subNetwork.deleteNetwork();
+    subNetwork.createNetwork(dataPath);
 
     pressEnterToReturn();
     lineFailuresMenu();
 }
 
 void Menu::failuresRemoveStation() {
-    Node* source = receiveNode(true);
-    Node* destination = receiveNode(false);
-    unsigned int maxFlow = subNetwork.edmondsKarp(source, destination);
-
     system("clear || cls");
+    cout << endl << "   Please enter a valid station code : ";
+
+    auto* station = receiveNode<Station>("P", false);
+
+    subNetwork.removeStation(station);
+    network.edmondsKarp(); subNetwork.edmondsKarp();
+
     cout << endl
-         << "   | MAX NUMBER OF TRAINS IN A SEGMENT - REDUCED CONNECTIVITY |" << endl << endl;
+         << "   " << station->getCode() << " has been removed from the network." << endl << endl
+         << "   | CITIES AFFECTED |" << endl << endl;
 
-    if (isStationOutputSafe(source))
-        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
-             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
-    else
-        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+    for (int i = 0; i < network.getCitySet().size(); i++)
+    {
+        City *city1 = network.getCitySet()[i];
+        City *city2 = subNetwork.getCitySet()[i];
+        if (city1->getCapacity() != city2->getCapacity())
+            cout << "   " << city1->getCode() << " | " << city1->getName() << endl
+                 << "     Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
+                 << "     New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
+                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) - (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+    }
 
-    if (isStationOutputSafe(destination))
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
-             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
-    else
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
-
-    cout << endl << "   Considering the segment failures, the maximum number of trains that can" << endl
-         << endl << "          simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+    subNetwork.deleteNetwork();
+    subNetwork.createNetwork(dataPath);
 
     pressEnterToReturn();
     lineFailuresMenu();
 }
 
 void Menu::failuresRemovePipe() {
-    Node* source = receiveNode(true);
-    Node* destination = receiveNode(false);
-    unsigned int maxFlow = subNetwork.edmondsKarp(source, destination);
-
     system("clear || cls");
+    cout << endl << "   Please enter a valid station code : ";
+
+    auto* station = receiveNode<Station>("P", false);
+
+    subNetwork.removeStation(station);
+    network.edmondsKarp(); subNetwork.edmondsKarp();
+
     cout << endl
-         << "   | MAX NUMBER OF TRAINS IN A SEGMENT - REDUCED CONNECTIVITY |" << endl << endl;
+         << "   " << station->getCode() << " has been removed from the network." << endl << endl
+         << "   | CITIES AFFECTED |" << endl << endl;
 
-    if (isStationOutputSafe(source))
-        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
-             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
-    else
-        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+    for (int i = 0; i < network.getCitySet().size(); i++)
+    {
+        City *city1 = network.getCitySet()[i];
+        City *city2 = subNetwork.getCitySet()[i];
+        if (city1->getCapacity() != city2->getCapacity())
+            cout << "   " << city1->getCode() << " | " << city1->getName() << endl
+                 << "     Old Flow: " << city1->getCapacityValue() - city1->getCapacity() << endl
+                 << "     New Flow: " << city2->getCapacityValue() - city2->getCapacity() << endl
+                 << "     Deficit: " << (city1->getCapacityValue() - city1->getCapacity()) - (city2->getCapacityValue() - city2->getCapacity()) << endl << endl;
+    }
 
-    if (isStationOutputSafe(destination))
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
-             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
-    else
-        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
-
-    cout << endl << "   Considering the segment failures, the maximum number of trains that can" << endl
-         << endl << "          simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+    subNetwork.deleteNetwork();
+    subNetwork.createNetwork(dataPath);
 
     pressEnterToReturn();
     lineFailuresMenu();
@@ -464,17 +476,18 @@ void Menu::failuresRemovePipe() {
 // ----------------- Auxiliary Functions ---------------- //
 
 template<typename NodeType>
-NodeType* Menu::receiveNode() {
+NodeType* Menu::receiveNode(const string& type, bool networkID) {
     string input;
     Node* nodeptr;
 
     getline(cin >> ws, input);
 
     do {
-        nodeptr = network.findNode(input);
-        if (nodeptr != nullptr)
+        if (networkID) nodeptr = network.findNode(input);
+        else nodeptr = subNetwork.findNode(input);
+        if (nodeptr != nullptr && nodeptr->getCode().substr(0,1) == type)
             return dynamic_cast<NodeType *>(nodeptr);
-        cout << endl << "   Please enter a valid station name : ";
+        cout << endl << "   Please enter a valid code : ";
         getline(cin >> ws, input);
     }
     while(true);

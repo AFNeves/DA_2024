@@ -84,16 +84,16 @@ void Network::augmentFlowAlongPath(Node *s, Node *t, int f)
     }
 }
 
-int Network::edmondsKarp(Node *s, Node *t)
+int Network::edmondsKarp()
 {
     resetNetwork();
 
     int maxFlow = 0;
 
-    while (findAugmentingPath(s, t))
+    while (findAugmentingPath(superSrc, superSink))
     {
-        int minResidual = findMinResidualAlongPath(s, t);
-        augmentFlowAlongPath(s, t, minResidual);
+        int minResidual = findMinResidualAlongPath(superSrc, superSink);
+        augmentFlowAlongPath(superSrc, superSink, minResidual);
         maxFlow += minResidual;
     }
 

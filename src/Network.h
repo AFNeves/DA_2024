@@ -38,8 +38,10 @@ public:
 
     /* Functions */
     void deleteNetwork();
-    void createNetwork(const std::string& dataPath, bool small);
+    void createNetwork(const std::string& dataPath);
     Node *findNode(const std::string& nodeCode);
+    void removeReservoir(Reservoir *r);
+    void removeStation(Station *s);
     void resetNetwork();
 
     /* Parsing */
@@ -53,7 +55,7 @@ public:
     bool findAugmentingPath(Node *s, Node *t);
     int findMinResidualAlongPath(Node *s, Node *t);
     void augmentFlowAlongPath(Node *s, Node *t, int f);
-    int edmondsKarp(Node *s, Node *t);
+    int edmondsKarp();
 
 private:
 

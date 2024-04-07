@@ -58,8 +58,7 @@ void Node::addPipe(Node *dest, int cap)
 void Node::removePipe(Node *dest)
 {
     for (auto it = adj.begin(); it != adj.end(); it++)
-        if ((*it)->dest == dest)
-            adj.erase(it);
+        if ((*it)->dest == dest) { adj.erase(it); return; }
 }
 
 Pipe* Node::getPipeTo(Node *dest)

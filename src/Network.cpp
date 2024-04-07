@@ -67,14 +67,40 @@ void Network::deleteNetwork()
     reservoirSet.clear();
 }
 
-void Network::createNetwork(const std::string &dataPath, bool small)
+void Network::createNetwork(const std::string &dataPath)
 {
-    deleteNetwork();
+    deleteNetwork(); bool small = dataPath.empty();
     readCities(small ? "../data/small/Cities_Madeira.csv" : dataPath + "Cities.csv");
     readStations(small ? "../data/small/Stations_Madeira.csv" : dataPath + "Stations.csv");
     readReservoirs(small ? "../data/small/Reservoirs_Madeira.csv" : dataPath + "Reservoir.csv");
     readPipes(small ? "../data/small/Pipes_Madeira.csv" : dataPath + "Pipes.csv");
     readSuperElements();
+}
+
+void Network::removeReservoir(Reservoir *r)
+{
+    nodeSet.erase(nodeSet.find(r->getCode()));
+
+    reservoirSet.erase(reservoirSet.begin() + r->getID() - 1);
+
+    superSrc->removePipe(r);
+
+    delete r;
+}
+
+void Network::removeStation(Station *s)
+{
+    nodeSet.erase(nodeSet.find(s->getCode()));
+
+    stationSet.erase(stationSet.begin() + s->getID() - 1);
+
+    for (auto reservoir : reservoirSet)
+        reservoir->removePipe(s);
+
+    for (auto station : stationSet)
+        station->removePipe(s);
+
+    delete s;
 }
 
 Node *Network::findNode(const std::string& nodeCode)

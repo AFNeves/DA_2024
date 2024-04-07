@@ -30,7 +30,7 @@ public:
     void failuresRemovePipe();
 
     template<typename NodeType>
-    NodeType* receiveNode();
+    NodeType* receiveNode(const std::string& type, bool network);
     static bool confirmChoice();
     static void pressEnterToReturn();
 
